@@ -65,13 +65,13 @@ checkboxes.forEach(checkbox => {
 
     otButtons.forEach(button => {
       if (this.checked) {
-        button.classList.remove('disabled'); // Enable OT buttons
-        otRow.style.display = 'flex'; // Show OT row
+        button.classList.remove('disabled');
+        otRow.style.display = 'flex';
       } else {
-        button.classList.add('disabled'); // Disable OT buttons
-        button.value = ''; // Reset value
+        button.classList.add('disabled');
+        button.value = '';
         if (!otRow.querySelector('.ot-button:not(.disabled)')) {
-          otRow.style.display = 'none'; // Hide OT row if no enabled OT buttons
+          otRow.style.display = 'none';
         }
       }
     });
@@ -102,6 +102,9 @@ document.getElementById("submitBtn").addEventListener("click", function (event) 
   schedule.timeSubmitted = new Date().toLocaleString();
   console.log(document.getElementById('ots[2][night][ot1]'))
   document.getElementById('ots[2][night][ot1]').focus();
+
+  alert(lolname);
+
   // const aaa = document.getElementById('day1[morning][reg]');
   // console.log(aaa.checked);
   // aaa.focus();

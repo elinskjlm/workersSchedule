@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/formWorker', (req, res) => {
-    res.render('formWorker')
+    res.render('formWorker', { weekNum: 23, year: 2025 });
 })
 
 app.get('/formToggle', (req, res) => {
