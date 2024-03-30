@@ -3,6 +3,64 @@ const otButtons = document.querySelectorAll('.ot-button'); // Select all OT butt
 const weekNum = 13; // TEMP
 const year = 2024; // TEMP
 
+const schedule = {
+  id: 0,
+  timeSubmitted: "",
+  weekYear: [weekNum, year],
+  name: "",
+  schedule: {
+  },
+  comment: "",
+  status: 0
+}
+
+for (let day = 1; day <= 7; day++) {
+  schedule.schedule["day" + day] = {
+    morning: {
+      reg: false,
+      ot1: false
+    },
+    noon: {
+      reg: false
+    },
+    night: {
+      reg: false,
+      ot1: false,
+      ot2: false
+    }
+  }
+}
+
+
+schedule.name = "sgsrggr";
+// const temp = document.querySelectorAll('[id*="morning"]');
+const allOtRows = document.querySelectorAll('.row-ot');
+const allCheckboxes = document.querySelectorAll('.ot-toggle, .shift-toggle');
+const allOtBoxes = document.querySelectorAll('.ot-toggle');
+const allShiftBoxes = document.querySelectorAll('.shift-toggle');
+// const allShiftBoxes = document.querySelectorAll('input[data-category="reg"]');
+
+
+// DEV TEMP TO DELETE
+const devtemp = document.querySelector('#devtemp');
+devtemp.addEventListener('click', () => {
+  console.log(schedule);
+})
+
+allCheckboxes.forEach(checkbox => {
+  const day = checkbox.dataset.day;
+  const shift = checkbox.dataset.shift;
+  const category = checkbox.dataset.category;
+  checkbox.addEventListener('change', () => {
+    schedule.schedule["day" + day][shift][category] = checkbox.checked;
+    if (checkbox.checked){
+      console.log('ttttttttt');
+    } else {
+      console.log('ffffffffff');
+    }
+  })
+})
+
 
 function onPageLoad() {
   const { startDate, endDate } = getWeekStartEndDates(year, weekNum);
@@ -12,31 +70,7 @@ function onPageLoad() {
 }
 onPageLoad();
 
-const schedule = {
-  id: 0,
-  timeSubmitted: "",
-  weekYear: [weekNum, year],
-  name: "",
-  schedule: {
-    day0: {
-      morning: {
-        reg: false,
-        ot1: false
-      },
-      noon: {
-        reg: false
-      },
-      night: {
-        reg: false,
-        ot1: false,
-        ot2: false
-      },
-    },
-  },
-  comment: "",
-  status: 0
-}
-schedule.name = "sgsrggr";
+
 function getWeekStartEndDates(year, weekNum) {
   // Create a Date object representing the first day of the year.
   const d = new Date(year, 0, 1);
@@ -58,40 +92,28 @@ function getWeekStartEndDates(year, weekNum) {
 
 
 
-checkboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', function () {
-    const otRow = this.closest('.row-shifts').nextElementSibling; // Get the next sibling row (OT row)
-    const otButtons = otRow.querySelectorAll('.ot-button.' + (this.name.includes('night') ? 'night' : 'morning')); // Select relevant OT buttons based on checkbox type
+// checkboxes.forEach(checkbox => {
+//   checkbox.addEventListener('change', function () {
+//     const otRow = this.closest('.row-shifts').nextElementSibling; // Get the next sibling row (OT row)
+//     const otToggles = otRow.querySelectorAll('.ot-toggle'); // Select relevant OT buttons based on checkbox type
 
-    otButtons.forEach(button => {
-      if (this.checked) {
-        button.classList.remove('disabled');
-        otRow.style.display = 'flex';
-      } else {
-        button.classList.add('disabled');
-        button.value = '';
-        if (!otRow.querySelector('.ot-button:not(.disabled)')) {
-          otRow.style.display = 'none';
-        }
-      }
-    });
-  });
-});
-
-
-otButtons.forEach(button => {
-  button.addEventListener('click', function () {
-    if (this.value !== 'on') {
-      this.value = 'on';
-      this.classList.add('btn-primary');
-    } else {
-      this.value = ''; // Reset value (if needed)
-      this.classList.remove('btn-primary');
-    }
-
-  });
-});
-
+//     otToggles.forEach(toggle => {
+//       if (this.checked) {
+//         // console.log(`this is checked: ${this}`);
+//         // console.log(otRow);
+//         // console.log(otToggles);
+//         // toggle.classList.remove('disabled');
+//         // otRow.style.display = 'flex';
+//       } else {
+//         // console.log(`this is unchecked: ${this}`);
+//         // toggle.classList.add('disabled');
+//         // toggle.value = '';
+//         // if (!otRow.querySelector('.ot-button:not(.disabled)')) {
+//         //   otRow.style.display = 'none';
+//       }
+//     });
+//   });
+// });
 
 
 
@@ -136,5 +158,3 @@ function validateForm() {
     return false;
   }
 }
-
-
