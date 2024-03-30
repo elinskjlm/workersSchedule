@@ -1,6 +1,6 @@
 const checkboxes = document.querySelectorAll('input[type="checkbox"][name*="[night]"], input[type="checkbox"][name*="[morning]"]'); // Select all night and morning shift checkboxes
 const otButtons = document.querySelectorAll('.ot-button'); // Select all OT buttons
-const weekNum = 13; // TEMP
+const weekNum = 24; // TEMP
 const year = 2024; // TEMP
 
 const schedule = {
@@ -49,14 +49,28 @@ devtemp.addEventListener('click', () => {
 
 allCheckboxes.forEach(checkbox => {
   const day = checkbox.dataset.day;
+  const dayInSche = schedule.schedule["day" + day];
   const shift = checkbox.dataset.shift;
   const category = checkbox.dataset.category;
+  const hasOt = checkbox.classList.contains('has-ot');
+  const otRow = document.querySelector(`div.row-ot.day-${day}`);
+
+  const TEMP = document.querySelectorAll(`input[data-day="${day}"][data-shift="${shift}"][data-category*="ot"]`)
   checkbox.addEventListener('change', () => {
-    schedule.schedule["day" + day][shift][category] = checkbox.checked;
-    if (checkbox.checked){
-      console.log('ttttttttt');
+    dayInSche[shift][category] = checkbox.checked;
+    const showRowDay = dayInSche["morning"]["reg"] || dayInSche["night"]["reg"];
+    const ableOtShift = dayInSche[shift]["reg"];
+    if (showRowDay){
+      otRow.classList.remove('hidden');
     } else {
-      console.log('ffffffffff');
+      otRow.classList.add('hidden');
+    }
+    if (ableOtShift){
+      console.log(`Able: ${TEMP}`);
+      TEMP.forEach(box => box.disabled = !ableOtShift);
+    } else {
+      console.log(`Disable: ${TEMP}`);
+      TEMP.forEach(box => box.disabled = !ableOtShift);
     }
   })
 })

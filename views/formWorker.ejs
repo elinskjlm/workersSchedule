@@ -15,8 +15,10 @@
     <main class="container col-lg-6 col-md-8 mt-5">
         <div class="container mb-5">
             <h1 class="text-center">טופס הגשת סידור עבודה</h1>
-            <h4 class="text-center">עבור שבוע <span id="start-date"></span>-<span id="end-date">#</span> (<span
-                    id="weeknum"></span>)</h4>
+            <h4 class="text-center fw-light">עבור שבוע 
+                <span class="text-muted fw-bold" id="start-date">#</span> עד 
+                <span class="text-muted fw-bold" id="end-date">#</span> (מס' <span class="text-muted" id="weeknum"></span>)
+            </h4>
         </div>
         <form action="/worksche" method="GET">
             <div class="container mb-5 col-8">
@@ -48,7 +50,7 @@
                 <% for (let i=0; i < 7; i++) { %>
 
                     <!-- 1st ROW (shifts) -->
-                    <div class="row row-shifts">
+                    <div class="row row-shifts day-<%= i+1 %>">
 
                         <div class="col p-2 d-flex justify-content-center">
                             <%= days[i] %>
@@ -84,7 +86,7 @@
                     </div>
 
                     <!-- 2cd ROW (OTs) -->
-                    <div class="row row-ot border-bottom "> <!-- hidden -->
+                    <div class="row row-ot day-<%= i+1 %> border-bottom hidden">
 
                         <div class="col p-2 d-flex justify-content-center">
                             <!-- for maintaining structure  -->
@@ -108,7 +110,7 @@
                         <div class="col d-flex flex-wrap justify-content-center align-items-start">
 
                             <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input ot-toggle" 
+                                <input type="checkbox" class="form-check-input ot-toggle" disabled
                                 id="ots[<%= i + 1 %>][night][ot1]"
                                 name="ots[<%= i + 1 %>][night][ot][1]"
                                 data-day="<%= i + 1 %>" data-shift="night" data-category="ot1">
@@ -117,7 +119,7 @@
                             </div>
 
                             <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input ot-toggle" 
+                                <input type="checkbox" class="form-check-input ot-toggle" disabled
                                 id="ots[<%= i + 1 %>][night][ot2]"
                                 name="ots[<%= i + 1 %>][night][ot][2]"
                                 data-day="<%= i + 1 %>" data-shift="night" data-category="ot2">
