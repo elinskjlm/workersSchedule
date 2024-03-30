@@ -11,7 +11,6 @@
 </head>
 
 <body class="mb-5 d-flex flex-column">
-    <div><button id="devtemp">trigger 🔫</button></div>
     <main class="container col-lg-6 col-md-8 mt-5">
         <div class="container mb-5">
             <h1 class="text-center">טופס הגשת סידור עבודה</h1>
@@ -25,8 +24,8 @@
                 <label class="form-label" for="fullName" id="uniqueID">
                     <h5>שם מלא</h5>
                 </label>
-                <input class="form-control" type="text" name="fullName" id="fullName" placeholder="שם פרטי ומשפחה"
-                    required value="">
+                <input class="form-control" type="text" name="fullName" id="fullName"
+                    placeholder="שם פרטי ומשפחה" maxlength="25" required>
             </div>
             <div class="container mb-5">
                 <label class="form-label" for="fullName">
@@ -68,9 +67,9 @@
                         <div class="col p-2 d-flex justify-content-center">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input shift-toggle"
-                                id="shifts[<%= i + 1 %>][noon][reg]"
-                                name="shifts[<%= i + 1 %>][noon][reg]"
-                                data-day="<%= i + 1 %>" data-shift="noon" data-category="reg">
+                                    id="shifts[<%= i + 1 %>][noon][reg]"
+                                    name="shifts[<%= i + 1 %>][noon][reg]"
+                                    data-day="<%= i + 1 %>" data-shift="noon" data-category="reg">
                             </div>
                         </div>
 
@@ -95,11 +94,11 @@
                         <div class="col d-flex justify-content-center align-items-start">
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input ot-toggle" 
-                                id="ots[<%= i + 1 %>][morning][ot1]"
-                                name="ots[<%= i + 1 %>][morning][ot]"
-                                data-day="<%= i + 1 %>" data-shift="morning" data-category="ot1">
+                                    id="ots[<%= i + 1 %>][morning][ot1]"
+                                    name="ots[<%= i + 1 %>][morning][ot]"
+                                    data-day="<%= i + 1 %>" data-shift="morning" data-category="ot1">
                                 <label class="form-check-label small"
-                                    for="ots[<%= i + 1 %>][morning][ot]">עד 19:00</label>
+                                    for="ots[<%= i + 1 %>][morning][ot]">עד 19</label>
                             </div>
                         </div>
 
@@ -111,20 +110,20 @@
 
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input ot-toggle" disabled
-                                id="ots[<%= i + 1 %>][night][ot1]"
-                                name="ots[<%= i + 1 %>][night][ot][1]"
-                                data-day="<%= i + 1 %>" data-shift="night" data-category="ot1">
+                                    id="ots[<%= i + 1 %>][night][ot1]"
+                                    name="ots[<%= i + 1 %>][night][ot][1]"
+                                    data-day="<%= i + 1 %>" data-shift="night" data-category="ot1">
                                 <label class="form-check-label small"
-                                    for="ots[<%= i + 1 %>][night][ot][1]">מ-19:00</label>
+                                    for="ots[<%= i + 1 %>][night][ot][1]">מ-19</label>
                             </div>
 
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input ot-toggle" disabled
-                                id="ots[<%= i + 1 %>][night][ot2]"
-                                name="ots[<%= i + 1 %>][night][ot][2]"
-                                data-day="<%= i + 1 %>" data-shift="night" data-category="ot2">
+                                    id="ots[<%= i + 1 %>][night][ot2]"
+                                    name="ots[<%= i + 1 %>][night][ot][2]"
+                                    data-day="<%= i + 1 %>" data-shift="night" data-category="ot2">
                                 <label class="form-check-label small"
-                                    for="ots[<%= i + 1 %>][night][ot][2]">עד 11:00</label>
+                                    for="ots[<%= i + 1 %>][night][ot][2]">עד 11</label>
                             </div>
 
                         </div>
@@ -136,7 +135,7 @@
                 <label class="form-label" for="comment">
                     <h5>הערות מיוחדות</h5>
                 </label>
-                <input class="form-control" type="text" name="comment" id="comment" value="">
+                <input class="form-control" type="text" name="comment" id="comment" maxlength="500">
             </div>
             <div class="d-flex justify-content-end">
                 <button type="submit" class="btn btn-primary mt-3" id="submitBtn">הגשת הסידור</button>

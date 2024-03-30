@@ -2,11 +2,18 @@ const checkboxes = document.querySelectorAll('input[type="checkbox"][name*="[nig
 const otButtons = document.querySelectorAll('.ot-button'); // Select all OT buttons
 const weekNum = 24; // TEMP
 const year = 2024; // TEMP
+const allOtRows = document.querySelectorAll('.row-ot');
+const allCheckboxes = document.querySelectorAll('.ot-toggle, .shift-toggle');
+const allOtBoxes = document.querySelectorAll('.ot-toggle');
+const allShiftBoxes = document.querySelectorAll('.shift-toggle');
+const fullNameElement = document.getElementById('fullName');
+const commentElement = document.getElementById('comment');
+const submitBtn = document.getElementById("submitBtn");
+const regexName = /^[\u0590-\u05FF\s'"\`\-().\[\]]{2,}$/;
 
 const schedule = {
-  id: 0,
   timeSubmitted: "",
-  weekYear: [weekNum, year],
+  regardingWeek: [weekNum, year],
   name: "",
   schedule: {
   },
@@ -31,33 +38,24 @@ for (let day = 1; day <= 7; day++) {
   }
 }
 
+function onPageLoad() {
+  const { startDate, endDate } = getWeekStartEndDates(year, weekNum);
+  document.getElementById('weeknum').innerHTML = weekNum;
+  document.getElementById('start-date').innerHTML = startDate;
+  document.getElementById('end-date').innerHTML = endDate;
+}
+onPageLoad();
 
-schedule.name = "sgsrggr";
-// const temp = document.querySelectorAll('[id*="morning"]');
-const allOtRows = document.querySelectorAll('.row-ot');
-const allCheckboxes = document.querySelectorAll('.ot-toggle, .shift-toggle');
-const allOtBoxes = document.querySelectorAll('.ot-toggle');
-const allShiftBoxes = document.querySelectorAll('.shift-toggle');
-// const allShiftBoxes = document.querySelectorAll('input[data-category="reg"]');
-
-
-// DEV TEMP TO DELETE
-const devtemp = document.querySelector('#devtemp');
-devtemp.addEventListener('click', () => {
-  console.log(schedule);
-})
 
 allCheckboxes.forEach(checkbox => {
   const day = checkbox.dataset.day;
   const dayInSche = schedule.schedule["day" + day];
   const shift = checkbox.dataset.shift;
   const category = checkbox.dataset.category;
-  // const hasOt = checkbox.classList.contains('has-ot');
   const otRow = document.querySelector(`div.row-ot.day-${day}`);
-
   const otBoxes = document.querySelectorAll(`input[data-day="${day}"][data-shift="${shift}"][data-category*="ot"]`)
+  
   checkbox.addEventListener('change', () => {
-    // console.log(`CHANGE IN  ${checkbox.name}`)
     dayInSche[shift][category] = checkbox.checked;
     const showRowDay = dayInSche["morning"]["reg"] || dayInSche["night"]["reg"];
     const ableOtShift = dayInSche[shift]["reg"];
@@ -66,22 +64,10 @@ allCheckboxes.forEach(checkbox => {
       ['ot1', 'ot2'].forEach(key => dayInSche[shift][key] && (dayInSche[shift][key] = false));
     }
     otBoxes.forEach(box => box.disabled = !ableOtShift);
-    if (showRowDay){
-      otRow.classList.remove('hidden');
-    } else {
-      otRow.classList.add('hidden');
-    }
+    showRowDay ? otRow.classList.remove('hidden') : otRow.classList.add('hidden');
   })
 })
 
-
-function onPageLoad() {
-  const { startDate, endDate } = getWeekStartEndDates(year, weekNum);
-  document.getElementById('weeknum').innerHTML = weekNum;
-  document.getElementById('start-date').innerHTML = startDate;
-  document.getElementById('end-date').innerHTML = endDate;
-}
-onPageLoad();
 
 
 function getWeekStartEndDates(year, weekNum) {
@@ -104,42 +90,37 @@ function getWeekStartEndDates(year, weekNum) {
 }
 
 
-document.getElementById("submitBtn").addEventListener("click", function (event) {
+submitBtn.addEventListener("click", event => {
+  schedule.timeSubmitted = new Date().toLocaleString();
+  //regardingWeek is alredy populated
+  if (checkName()){
+    schedule.name = fullNameElement.value;
+  } else {
+    fullNameElement.scrollIntoView();
+    event.preventDefault();
+    event.stopPropagation();
+    return
+  }
+  schedule.comment = commentElement.value;
+  console.log(schedule);
   event.preventDefault();
   event.stopPropagation();
-  schedule.timeSubmitted = new Date().toLocaleString();
-  console.log(document.getElementById('ots[2][night][ot1]'))
-  document.getElementById('ots[2][night][ot1]').focus();
-
-  alert(lolname);
-
-  // const aaa = document.getElementById('day1[morning][reg]');
-  // console.log(aaa.checked);
-  // aaa.focus();
-  // validateForm();
-  console.log(schedule);
 });
 
+fullNameElement.addEventListener('change', () => {
+  checkName();
+})
 
-function checkName(name) {
-  name = name.trim();
-  return /^[\u0590-\u05FF\s]{2,}$/.test(name);
-}
-
-const fullNameElement = document.getElementById('fullName');
-
-function validateForm() {
+const checkName = () => {
   const fullName = fullNameElement.value.trim();
-  if (checkName(fullName)) {
+  const isNameOk = regexName.test(fullName);
+  if (isNameOk) {
+    fullNameElement.classList.remove('border-danger');
+    fullNameElement.value = fullName;
     schedule.name = fullName;
   } else {
-    fullNameElement.focus();
-    if (typeof fullNameElement.scrollIntoViewIfNeeded === 'function') {
-      fullNameElement.scrollIntoViewIfNeeded({ behavior: "smooth" }); // Scroll smoothly if needed
-    } else {
-      fullNameElement.scrollIntoView({ behavior: "smooth" }); // Fallback for older browsers
-    }
-    window.alert('name!!');
-    return false;
+    fullNameElement.classList.add('border-danger');
   }
+  return isNameOk;
 }
+
