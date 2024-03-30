@@ -52,25 +52,24 @@ allCheckboxes.forEach(checkbox => {
   const dayInSche = schedule.schedule["day" + day];
   const shift = checkbox.dataset.shift;
   const category = checkbox.dataset.category;
-  const hasOt = checkbox.classList.contains('has-ot');
+  // const hasOt = checkbox.classList.contains('has-ot');
   const otRow = document.querySelector(`div.row-ot.day-${day}`);
 
-  const TEMP = document.querySelectorAll(`input[data-day="${day}"][data-shift="${shift}"][data-category*="ot"]`)
+  const otBoxes = document.querySelectorAll(`input[data-day="${day}"][data-shift="${shift}"][data-category*="ot"]`)
   checkbox.addEventListener('change', () => {
+    // console.log(`CHANGE IN  ${checkbox.name}`)
     dayInSche[shift][category] = checkbox.checked;
     const showRowDay = dayInSche["morning"]["reg"] || dayInSche["night"]["reg"];
     const ableOtShift = dayInSche[shift]["reg"];
+    if (!ableOtShift) {
+      otBoxes.forEach(box => box.checked = false);
+      ['ot1', 'ot2'].forEach(key => dayInSche[shift][key] && (dayInSche[shift][key] = false));
+    }
+    otBoxes.forEach(box => box.disabled = !ableOtShift);
     if (showRowDay){
       otRow.classList.remove('hidden');
     } else {
       otRow.classList.add('hidden');
-    }
-    if (ableOtShift){
-      console.log(`Able: ${TEMP}`);
-      TEMP.forEach(box => box.disabled = !ableOtShift);
-    } else {
-      console.log(`Disable: ${TEMP}`);
-      TEMP.forEach(box => box.disabled = !ableOtShift);
     }
   })
 })
@@ -105,33 +104,6 @@ function getWeekStartEndDates(year, weekNum) {
 }
 
 
-
-// checkboxes.forEach(checkbox => {
-//   checkbox.addEventListener('change', function () {
-//     const otRow = this.closest('.row-shifts').nextElementSibling; // Get the next sibling row (OT row)
-//     const otToggles = otRow.querySelectorAll('.ot-toggle'); // Select relevant OT buttons based on checkbox type
-
-//     otToggles.forEach(toggle => {
-//       if (this.checked) {
-//         // console.log(`this is checked: ${this}`);
-//         // console.log(otRow);
-//         // console.log(otToggles);
-//         // toggle.classList.remove('disabled');
-//         // otRow.style.display = 'flex';
-//       } else {
-//         // console.log(`this is unchecked: ${this}`);
-//         // toggle.classList.add('disabled');
-//         // toggle.value = '';
-//         // if (!otRow.querySelector('.ot-button:not(.disabled)')) {
-//         //   otRow.style.display = 'none';
-//       }
-//     });
-//   });
-// });
-
-
-
-
 document.getElementById("submitBtn").addEventListener("click", function (event) {
   event.preventDefault();
   event.stopPropagation();
@@ -147,7 +119,6 @@ document.getElementById("submitBtn").addEventListener("click", function (event) 
   // validateForm();
   console.log(schedule);
 });
-
 
 
 function checkName(name) {
