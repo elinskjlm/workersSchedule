@@ -1,1 +1,7 @@
 
+.choices__list * {
+    padding: 0;
+}
+.choices__item * {
+    padding: 0;
+}
