@@ -102,9 +102,6 @@ submitBtn.addEventListener("click", event => {
     return
   }
   schedule.comment = commentElement.value;
-  console.log(schedule);
-  event.preventDefault();
-  event.stopPropagation();
 });
 
 fullNameElement.addEventListener('change', () => {

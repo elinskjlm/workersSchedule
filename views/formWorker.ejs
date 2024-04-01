@@ -19,7 +19,7 @@
                 <span class="text-muted fw-bold" id="end-date">#</span> (מס' <span class="text-muted" id="weeknum"></span>)
             </h4>
         </div>
-        <form action="/worksche" method="GET">
+        <form action="/thankyou" method="GET">
             <div class="container mb-5 col-8">
                 <label class="form-label" for="fullName" id="uniqueID">
                     <h5>שם מלא</h5>
@@ -93,7 +93,7 @@
 
                         <div class="col d-flex justify-content-center align-items-start">
                             <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input ot-toggle" 
+                                <input type="checkbox" class="form-check-input ot-toggle" disabled
                                     id="ots[<%= i + 1 %>][morning][ot1]"
                                     name="ots[<%= i + 1 %>][morning][ot]"
                                     data-day="<%= i + 1 %>" data-shift="morning" data-category="ot1">

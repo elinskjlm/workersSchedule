@@ -24,6 +24,10 @@ app.get('/allForms', (req, res) => {
     res.render('allForms')
 })
 
+app.get('/thankyou', (req, res) => {
+    res.render('thankyou')
+})
+
 
 app.listen(8080, () => {
     console.log('listeningggg');
