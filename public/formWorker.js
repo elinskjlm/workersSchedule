@@ -1,19 +1,22 @@
-const checkboxes = document.querySelectorAll('input[type="checkbox"][name*="[night]"], input[type="checkbox"][name*="[morning]"]'); // Select all night and morning shift checkboxes
-const otButtons = document.querySelectorAll('.ot-button'); // Select all OT buttons
-const weekNum = 24; // TEMP
-const year = 2024; // TEMP
-const allOtRows = document.querySelectorAll('.row-ot');
-const allCheckboxes = document.querySelectorAll('.ot-toggle, .shift-toggle');
-const allOtBoxes = document.querySelectorAll('.ot-toggle');
-const allShiftBoxes = document.querySelectorAll('.shift-toggle');
+const checkboxes =      document.querySelectorAll('input[type="checkbox"][name*="[night]"], input[type="checkbox"][name*="[morning]"]'); // Select all night and morning shift checkboxes
+const otButtons =       document.querySelectorAll('.ot-button');
+const allOtRows =       document.querySelectorAll('.row-ot');
+const allCheckboxes =   document.querySelectorAll('.ot-toggle, .shift-toggle');
+const allOtBoxes =      document.querySelectorAll('.ot-toggle');
+const allShiftBoxes =   document.querySelectorAll('.shift-toggle');
+const form =            document.querySelector('form');
 const fullNameElement = document.getElementById('fullName');
-const commentElement = document.getElementById('comment');
-const submitBtn = document.getElementById("submitBtn");
-const regexName = /^[\u0590-\u05FF\s'"\`\-().\[\]]{2,}$/;
+const commentElement =  document.getElementById('comment');
+const submitBtn =       document.getElementById("submitBtn");
 
-const schedule = {
+const regexName = /^[\u0590-\u05FF\s'"\`\-().\[\]]{2,}$/;
+const weekNum = 24; // TEMP TODO
+const year = 2024; // TEMP TODO
+
+const scheduleWrapper = {
   timeSubmitted: "",
-  regardingWeek: [weekNum, year],
+  weekNum,
+  year,
   name: "",
   schedule: {
   },
@@ -22,7 +25,7 @@ const schedule = {
 }
 
 for (let day = 1; day <= 7; day++) {
-  schedule.schedule["day" + day] = {
+  scheduleWrapper.schedule["day" + day] = {
     morning: {
       reg: false,
       ot1: false
@@ -49,12 +52,12 @@ onPageLoad();
 
 allCheckboxes.forEach(checkbox => {
   const day = checkbox.dataset.day;
-  const dayInSche = schedule.schedule["day" + day];
+  const dayInSche = scheduleWrapper.schedule["day" + day];
   const shift = checkbox.dataset.shift;
   const category = checkbox.dataset.category;
   const otRow = document.querySelector(`div.row-ot.day-${day}`);
   const otBoxes = document.querySelectorAll(`input[data-day="${day}"][data-shift="${shift}"][data-category*="ot"]`)
-  
+
   checkbox.addEventListener('change', () => {
     dayInSche[shift][category] = checkbox.checked;
     const showRowDay = dayInSche["morning"]["reg"] || dayInSche["night"]["reg"];
@@ -89,21 +92,6 @@ function getWeekStartEndDates(year, weekNum) {
   };
 }
 
-
-submitBtn.addEventListener("click", event => {
-  schedule.timeSubmitted = new Date().toLocaleString();
-  //regardingWeek is alredy populated
-  if (checkName()){
-    schedule.name = fullNameElement.value;
-  } else {
-    fullNameElement.scrollIntoView();
-    event.preventDefault();
-    event.stopPropagation();
-    return
-  }
-  schedule.comment = commentElement.value;
-});
-
 fullNameElement.addEventListener('change', () => {
   checkName();
 })
@@ -114,10 +102,52 @@ const checkName = () => {
   if (isNameOk) {
     fullNameElement.classList.remove('border-danger');
     fullNameElement.value = fullName;
-    schedule.name = fullName;
+    scheduleWrapper.name = fullName;
   } else {
     fullNameElement.classList.add('border-danger');
   }
   return isNameOk;
 }
 
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  scheduleWrapper.timeSubmitted = new Date().toLocaleString();
+  //weekNum and year are already populated
+  if (checkName()) {
+    scheduleWrapper.name = fullNameElement.value;
+  } else {
+    fullNameElement.scrollIntoView();
+    e.stopPropagation();
+    return
+  }
+  scheduleWrapper.comment = commentElement.value;
+  const asStr = JSON.stringify(scheduleWrapper)
+  try {
+    const response = await fetch('http://localhost:8080/thankyou', {
+      method: 'POST',
+      body: asStr,
+      headers: {
+        'Content-type': 'application/json',
+      }
+    })
+    if (response.ok) {
+      const { redirect } = await response.json();
+      window.location.replace(redirect || 'http://localhost:8080/thankyou');
+    } else {
+      console.error('Error fetching');
+    }
+  } catch (error) {
+    console.error('Error fetching', error);
+  }
+})
+
+const recurStringify = function (obj) {
+  for (let el in obj) {
+      if (typeof (obj[el]) == 'object' && obj[el] !== null) {
+          recurStringify(obj[el])
+          obj[el] = JSON.stringify(obj[el])
+      }
+  }
+  return JSON.stringify(obj)
+}
