@@ -10,8 +10,8 @@ const commentElement =  document.getElementById('comment');
 const submitBtn =       document.getElementById("submitBtn");
 
 const regexName = /^[\u0590-\u05FF\s'"\`\-().\[\]]{2,}$/;
-const weekNum = 24; // TEMP TODO
-const year = 2024; // TEMP TODO
+const weekNum = +currentWeekData + 1; // TODO last week of the year
+const year = currentYearData;
 
 const scheduleWrapper = {
   timeSubmitted: "",
