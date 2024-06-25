@@ -72,6 +72,5 @@ input[type=submit] {
 }
 
 .text-break-rtl {
-    word-break: break-all;
-    direction: rtl;
+    overflow-wrap: break-word;
 }
