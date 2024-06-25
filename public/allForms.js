@@ -4,7 +4,6 @@ const /*NEW*/optionMap = new Map();
 const /*OLD*/allInputsWithLists = [];
 const years = yearsData.split(',');
 const weeks = weeksData.split(',');
-const names = namesData.split(',');
 
 const /*OLD*/yearsPick =       document.getElementById('yearsPick');
 const /*OLD*/weeksPick =       document.getElementById('weeksPick');
@@ -331,7 +330,6 @@ document.addEventListener('click', e => /*OLD*/closeOpenedLists(e))
 
 /*OLD*/autocomplete(/*OLD*/yearsPick, years);
 /*OLD*/autocomplete(/*OLD*/weeksPick, weeks);
-/*OLD*/autocomplete(/*OLD*/namesPick, names);
 
 /*OLD*/yearsPick.value = /*BOTH*/currentYear;
 /*OLD*/weeksPick.value = +/*BOTH*/currentWeek + 1;
