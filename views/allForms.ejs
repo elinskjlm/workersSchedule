@@ -13,40 +13,90 @@
 
 <body class="d-flex flex-column">
 
-    <main class="container mt-3 col-lg-8">
-        <div class="container">
+    <main class="container my-3 col-lg-8">
+        <div class="container my-3">
             <h1 class="text-center">בקשה לסידור עבודה</h1>
         </div>
 
-        <div class="container border border-info rounded">
+        <!-- ###################################################################################################### -->
+        <div class="container my-3 border border-info rounded">
+            <div class="row d-flex align-items-center">
+                <div class="col-2 p-2 d-flex justify-content-center">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">שנה</span>
+                        <input type="text" id="years-field" name="years-field" list="years-list" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                        <datalist id="years-list"></datalist>
+                    </div>
+                </div>
+                <div class="col-2 p-2 d-flex justify-content-center">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">שבוע</span>
+                        <input type="text" id="weeks-field" name="weeks-field" list="weeks-list" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                        <datalist id="weeks-list"></datalist>
+                    </div>
+                </div>
+                <div class="col-2 p-2 d-flex justify-content-center">
+                    <div id="update-names-button" class="btn btn-primary btn-sm">טען שמות</div>
+                </div>
+                <div class="col-4 p-2 d-flex justify-content-center">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">שם</span>
+                        <input type="text" id="names-field" name="names-field" list="names-list" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                        <datalist id="names-list"></datalist>
+                    </div>
+                </div>
+                <div class="col-2 p-2 d-flex justify-content-center">
+                    <div id="update-form-button" class="btn btn-primary btn-sm">עדכן</div>
+                </div>
+
+            </div>
+        </div>
+        <!-- ###################################################################################################### -->
+
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <div class="container my-3 border border-info rounded hidden">
             <div class="row d-flex align-items-center">
                 <div class="col-3 p-2 d-flex justify-content-center">
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">שנה</span>
-                        <input id="yearsPick" type="text" class="form-control tabbable" aria-label="Sizing example input"
+                        <span class="input-group-text">שנה</span>
+                        <input id="yearsPick" type="text" class="form-control" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-sm">
                     </div>
                 </div>
                 <div class="col-3 p-2 d-flex justify-content-center">
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">שבוע</span>
-                        <input id="weeksPick" type="text" class="form-control tabbable" aria-label="Sizing example input"
+                        <span class="input-group-text">שבוע</span>
+                        <input id="weeksPick" type="text" class="form-control" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-sm">
                     </div>
                 </div>
                 <div class="col-4 p-2 d-flex justify-content-center">
                     <div class="input-group input-group-sm">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">שם</span>
-                        <input id="namesPick" type="text" class="form-control tabbable" aria-label="Sizing example input"
+                        <span class="input-group-text">שם</span>
+                        <input id="namesPick" type="text" class="form-control" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-sm">
                     </div>
                 </div>
                 <div class="col-2 p-2 d-flex justify-content-center">
-                    <div class="btn btn-primary tabbable">עדכן</div>
+                    <div id="updateButton" class="btn btn-primary btn-sm">עדכן</div>
                 </div>
             </div>
         </div>
-
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+        <div class="container my-3 border border-info rounded">
+            <div class="row d-flex align-items-center">
+                <div class="col p-2 d-flex justify-content-center text-center text-justify">
+                    <span class="text-muted">הוגש ב:&MediumSpace;</span>
+                    <span id="dateSubmitted"></span>
+                    <span>&MediumSpace;&MediumSpace;</span>
+                    <span class="text-muted">&MediumSpace;בשעה:&MediumSpace;</span>
+                    <span id="timeSubmitted"></span>
+                </div>
+            </div>
+        </div>
         <div class="container my-3 border border-info rounded">
             <div class="row border-bottom">
                 <div class="col p-0 d-flex justify-content-center">
@@ -140,13 +190,14 @@
                     </div>
                     <% } %>
         </div>
-        <div class="container border border-info rounded">
+        <div class="container my-3 border border-info rounded">
             <label class="form-label" for="comment">
                 <h5>הערות מיוחדות</h5>
             </label>
-            <p class="text-justify">לורם איפסום דולור סיט אמט, קונסקטורר אדיפיסינג אלית הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שעותלשך
-                וחאית נובש ערששף. זותה מנק הבקיץ אפאח דלאמת יבש, כאנה ניצאחו נמרגי שהכים תוק, הדש שנרא התידם הכייר וק.
-                הועניב היושבב שערש שמחויט - שלושע ותלברו חשלו שערגם בורק? לתיג ישבעס.</p>
+            <p id="comment" class="text-justify"></p>
+        </div>
+        <div class="container my-3 border border-info rounded">
+            <div id="resetButton" class="btn btn-primary">איפוס</div>
         </div>
     </main>
 
@@ -164,7 +215,6 @@
     <script>
         const weeksData = '<%- weeks %>';
         const yearsData = '<%- years %>';
-        const namesData = '<%- names %>';
         const currentYearData = '<%- currentYear %>';
         const currentWeekData = '<%- currentWeek %>';
     </script>

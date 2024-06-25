@@ -124,16 +124,16 @@ form.addEventListener('submit', async (e) => {
   scheduleWrapper.comment = commentElement.value;
   const asStr = JSON.stringify(scheduleWrapper)
   try {
-    const response = await fetch('http://localhost:8080/thankyou', {
+    const response = await fetch('/api/schedules', {
       method: 'POST',
       body: asStr,
       headers: {
         'Content-type': 'application/json',
-      }
+      },
     })
     if (response.ok) {
       const { redirect } = await response.json();
-      window.location.replace(redirect || 'http://localhost:8080/thankyou');
+      window.location.replace(redirect || '/thankyou');
     } else {
       console.error('Error fetching');
     }
