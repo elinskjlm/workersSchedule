@@ -38,18 +38,18 @@
                     </div>
                 </div>
                 <div class="col-2 p-2 d-flex justify-content-center">
-                    <div id="update-names-button" class="btn btn-primary btn-sm">טען שמות</div>
+                    <div id="update-names-button" class="btn btn-primary btn-sm disabled">טען שמות</div>
                 </div>
                 <div class="col-4 p-2 d-flex justify-content-center">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">שם</span>
                         <input type="text" id="names-field" name="names-field" list="names-list" class="form-control"
-                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
                         <datalist id="names-list"></datalist>
                     </div>
                 </div>
                 <div class="col-2 p-2 d-flex justify-content-center">
-                    <div id="update-form-button" class="btn btn-primary btn-sm">עדכן</div>
+                    <div id="update-form-button" class="btn btn-primary btn-sm disabled">עדכן</div>
                 </div>
 
             </div>
@@ -57,21 +57,24 @@
         <!-- ###################################################################################################### -->
 
         <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-        <div class="container my-3 border border-info rounded hidden">
+        <div class="container my-3 border border-info rounded">
             <div class="row d-flex align-items-center">
-                <div class="col-3 p-2 d-flex justify-content-center">
+                <div class="col-2 p-2 d-flex justify-content-center">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">שנה</span>
                         <input id="yearsPick" type="text" class="form-control" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-sm">
                     </div>
                 </div>
-                <div class="col-3 p-2 d-flex justify-content-center">
+                <div class="col-2 p-2 d-flex justify-content-center">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">שבוע</span>
                         <input id="weeksPick" type="text" class="form-control" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-sm">
                     </div>
+                </div>
+                <div class="col-2 p-2 d-flex justify-content-center">
+                    <div id="namesButton" class="btn btn-primary btn-sm">טען שמות</div>
                 </div>
                 <div class="col-4 p-2 d-flex justify-content-center">
                     <div class="input-group input-group-sm">

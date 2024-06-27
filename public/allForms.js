@@ -1,30 +1,30 @@
 const currentYear = currentYearData;
 const currentWeek = currentWeekData;
 const /*NEW*/optionMap = new Map();
-const /*OLD*/allInputsWithLists = [];
+const /*OLD*/allInputsWithLists = {};
 const years = yearsData.split(',');
 const weeks = weeksData.split(',');
 
-const /*OLD*/yearsPick =       document.getElementById('yearsPick');
-const /*OLD*/weeksPick =       document.getElementById('weeksPick');
-const /*OLD*/namesPick =       document.getElementById('namesPick');
-const /*OLD*/updateButton =    document.getElementById('updateButton');
+const /*OLD*/yearsPick = document.getElementById('yearsPick');
+const /*OLD*/weeksPick = document.getElementById('weeksPick');
+const /*OLD*/namesPick = document.getElementById('namesPick');
+const /*OLD*/updateButton = document.getElementById('updateButton');
+const /*OLD*/namesButton = document.getElementById('namesButton');
 
-const /*NEW*/yearsField =      document.getElementById('years-field');
-const /*NEW*/weeksField =      document.getElementById('weeks-field');
-const /*NEW*/namesField =      document.getElementById('names-field');
-const /*NEW*/yearsList =       document.getElementById('years-list');
-const /*NEW*/weeksList =       document.getElementById('weeks-list');
-const /*NEW*/namesList =       document.getElementById('names-list');
-const /*NEW*/updateNamesBtn =  document.getElementById('update-names-button')
-const /*NEW*/updateFormBtn =  document.getElementById('update-form-button')
+const /*NEW*/yearsField = document.getElementById('years-field');
+const /*NEW*/weeksField = document.getElementById('weeks-field');
+const /*NEW*/namesField = document.getElementById('names-field');
+const /*NEW*/yearsList = document.getElementById('years-list');
+const /*NEW*/weeksList = document.getElementById('weeks-list');
+const /*NEW*/namesList = document.getElementById('names-list');
+const /*NEW*/updateNamesBtn = document.getElementById('update-names-button')
+const /*NEW*/updateFormBtn = document.getElementById('update-form-button')
 
-const /*BOTH*/resetButton =     document.getElementById('resetButton');
+const /*BOTH*/resetButton = document.getElementById('resetButton');
 
 
-function /*OLD*/autocomplete(inp, arr) {
-
-    allInputsWithLists.push(inp.id)
+function /*OLD*/autocomplete(inp, arr, role) {
+    allInputsWithLists[role] = inp.id;
     let currentFocus = -1;
 
     inp.addEventListener('click', function () {
@@ -80,21 +80,23 @@ function /*OLD*/autocomplete(inp, arr) {
         let filtereedArray;
         if (input) {
             filtereedArray = arr.reduce((filtered, item) => {
-                const index = item.toUpperCase().search(input.toUpperCase());
+                const asStr = item.toString()
+                const index = asStr.toUpperCase().search(input.toUpperCase());
                 if (index >= 0) {
-                    const strStart = item.substring(0, index)
-                    const strBold = item.substring(index, index + input.length)
-                    const strEnd = item.substring(index + input.length)
+                    const strStart = asStr.substring(0, index)
+                    const strBold = asStr.substring(index, index + input.length)
+                    const strEnd = asStr.substring(index + input.length)
                     const newItem = document.createElement('div');
                     newItem.innerHTML = `${strStart}<strong>${strBold}</strong>${strEnd}`;
-                    newItem.value = item;
+                    newItem.value = asStr;
                     filtered.push(newItem)
                 }
                 return filtered;
             }, [])
         } else {
             filtereedArray = arr.filter(item => {
-                const index = item.toUpperCase().search(input.toUpperCase());
+                const asStr = item.toString()
+                const index = asStr.toUpperCase().search(input.toUpperCase());
                 return index >= 0;
             })
         }
@@ -138,18 +140,18 @@ function /*OLD*/autocomplete(inp, arr) {
 }
 
 function /*OLD*/closeOpenedLists(e) {
-    allInputsWithLists.forEach(inpId => {
+    for (const [role, inpId] of Object.entries(allInputsWithLists)) {
         const inp = document.getElementById(inpId);
         if (inp != e.target) {
-            const listToRemove = document.getElementById(inp.id + '-autocomplete-list');
-            if (listToRemove) listToRemove.parentElement.removeChild(listToRemove);
+            const listToClose = document.getElementById(inp.id + '-autocomplete-list');
+            if (listToClose) listToClose.parentElement.removeChild(listToClose);
         }
-    })
+    }
 }
 
 async function /*OLD*//*TODO_DRY*/getAvailableNames() {
     if (yearsPick.value && weeksPick.value) {
-        const response = await fetch('/api/names?' + new URLSearchParams({
+        const response = await fetch('/api/schedules/getNames?' + new URLSearchParams({
             year: yearsPick.value,
             weeknum: weeksPick.value
         }))
@@ -160,13 +162,29 @@ async function /*OLD*//*TODO_DRY*/getAvailableNames() {
 
 async function /*NEW*//*TODO_DRY*/getAvailableNamesNEW() {
     if (yearsField.value && weeksField.value) {
-        const response = await fetch('/api/names?' + new URLSearchParams({
+        const response = await fetch('/api/schedules/getNames?' + new URLSearchParams({
             year: yearsField.value,
             weeknum: weeksField.value
         }))
         const availableNames = await response.json()
         return availableNames;
     }
+}
+
+async function /*NEW*//*TODO_DRY*/getAvailableWeeksNEW() {
+    if (yearsField.value) {
+        const response = await fetch('/api/schedules/getWeeks?' + new URLSearchParams({
+            year: yearsField.value,
+        }))
+        const availableWeeks = await response.json()
+        return availableWeeks;
+    }
+}
+
+async function /*NEW*//*TODO_DRY*/getAvailableYearsNEW() {
+    const response = await fetch('/api/schedules/getYears');
+    const availableYears = await response.json()
+    return availableYears;
 }
 
 function /*NEW*/attachDataId() {
@@ -196,11 +214,11 @@ function /*NEW*/loadNameList(availableNames) {
         // allOptions.forEach(opt => {
         //     optionMap.set(opt.value, opt.dataset.id);
         // })
-        console.dir(optionMap)
     }
 }
 
-function loadSimpleList(listElement, arr) {
+function /*NEW*/loadSimpleList(listElement, arr) {
+    /*NEW*/clearList(listElement);
     arr.forEach(item => {
         const option = document.createElement('option');
         option.setAttribute('value', item);
@@ -208,9 +226,33 @@ function loadSimpleList(listElement, arr) {
     })
 }
 
+async function /*NEW*/refreshYears() {
+    console.log('refresh years')
+    // TODO if current year is not in year (same for weeks)
+    const years = await getAvailableYearsNEW()
+    /*NEW*/loadSimpleList(/*NEW*/yearsList, years);
+    /*NEW*/weeksField.value = '';
+    /*NEW*/namesField.value = '';
+    /*NEW*/refreshWeeks();
+}
+
+async function /*NEW*/refreshWeeks() {
+    console.log('refresh weeks')
+    /*NEW*/namesField.value = '';
+    const weeks = await /*NEW*/getAvailableWeeksNEW()
+    /*NEW*/loadSimpleList(weeksList, weeks);
+    /*NEW*/refreshNames();
+}
+
 async function /*NEW*/refreshNames() {
+    console.log('refresh names')
     const availableNames = await /*NEW*/getAvailableNamesNEW();
     /*NEW*/loadNameList(availableNames);
+}
+
+async function /*OLD*/refreshNamesOLD() {
+    const availableNames = await /*OLD*/getAvailableNames();
+    /*OLD*/autocomplete(namesPick, availableNames, 'names');
 }
 
 async function /*BOTH*/fetchAndLoadForm(id = '') {
@@ -225,7 +267,6 @@ async function /*BOTH*/fetchAndLoadForm(id = '') {
 async function /*BOTH*/fetchSchedule(id) {
     const result = await fetch(`/api/schedules/${id}`)
     const wrappedSchedule = await result.json();
-    console.dir(wrappedSchedule)
     return wrappedSchedule;
 }
 
@@ -302,37 +343,38 @@ function /*BOTH*/clearSchedule() {
     elTimeSubmitted.innerHTML = '';
 }
 
+window.addEventListener('load', async () => {
 
-window.addEventListener('load', () => {
-    /*NEW*//*TODONEW*/refreshNames();
-    /*NEW*/loadSimpleList(yearsList, years);
-    /*NEW*/loadSimpleList(weeksList, weeks);
+    /*NEW*/yearsField.value = /*BOTH*/currentYear;
+    /*NEW*/weeksField.value = +/*BOTH*/currentWeek + 1;
+    await /*NEW*/refreshYears()
+    .then(() => {/*NEW*/yearsField.value = /*BOTH*/currentYear;})
+    // .then(() => {/*NEW*/refreshWeeks()})
+    .then(() => {/*NEW*/weeksField.value = /*BOTH*/+currentWeek + 1;})
+    // .then(() => {/*NEW*/refreshNames()})
+    .catch(e => console.error(e));
+
+    /*OLD*/autocomplete(/*OLD*/yearsPick, years, 'years');
+    /*OLD*/autocomplete(/*OLD*/weeksPick, weeks, 'weeks');
+    /*OLD*/autocomplete(/*OLD*/namesPick, [], 'names');
+
+    /*OLD*/yearsPick.value = /*BOTH*/currentYear;
+    /*OLD*/weeksPick.value = +/*BOTH*/currentWeek + 1;
+
 })
+
 document.addEventListener('click', e => /*OLD*/closeOpenedLists(e))
 
-/*NEW*/updateNamesBtn.addEventListener('click', () => refreshNames())
-/*NEW*/updateFormBtn.addEventListener('click', () => fetchAndLoadForm(namesField.dataset.id))
+/*NEW*/updateNamesBtn.addEventListener('click', () => /*NEW*/refreshNames())
+/*NEW*/updateFormBtn.addEventListener('click', () => /*BOTH*/fetchAndLoadForm(namesField.dataset.id))
 /*NEW*/namesField.addEventListener('blur', () => /*NEW*/attachDataId())
+/*NEW*/namesField.addEventListener('blur', () => /*NEW*/fetchAndLoadForm(namesField.dataset.id))
+/*NEW*/namesField.addEventListener('input', () => /*NEW*/clearSchedule())
+/*NEW*/yearsField.addEventListener('change', () => /*NEW*/refreshYears())
+/*NEW*/weeksField.addEventListener('change', () => /*NEW*/refreshWeeks())
 
-/*OLD*/yearsPick.addEventListener('blur', () => /*NEW*//*TODONEW*/refreshNames())
-/*OLD*/weeksPick.addEventListener('blur', () => /*NEW*//*TODONEW*/refreshNames())
-
-// /*NEW*/yearsField.addEventListener('blur', () => /*NEW*//*TODONEW*/refreshNames())
-// /*NEW*/weeksField.addEventListener('blur', () => /*NEW*//*TODONEW*/refreshNames())
-/*NEW*/namesField.addEventListener('change', () => {
-    const updatedId = namesField.dataset.id;
-    console.log(updatedId)
-    fetchAndLoadForm(updatedId)
-})
-
+/*OLD*/namesButton.addEventListener('click', () => /*OLD*/getAvailableNames())
 /*OLD*/updateButton.addEventListener('click', () => /*NEW*/fetchAndLoadForm()) /*👈🏻👈🏻👈🏻👈🏻👈🏻👈🏻👈🏻👈🏻*/
+
 /*BOTH*/resetButton.addEventListener('click', () => /*BOTH*/clearSchedule())
 
-/*OLD*/autocomplete(/*OLD*/yearsPick, years);
-/*OLD*/autocomplete(/*OLD*/weeksPick, weeks);
-
-/*OLD*/yearsPick.value = /*BOTH*/currentYear;
-/*OLD*/weeksPick.value = +/*BOTH*/currentWeek + 1;
-
-/*NEW*/yearsField.value = /*BOTH*/currentYear;
-/*NEW*/weeksField.value = +/*BOTH*/currentWeek + 1;

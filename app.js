@@ -51,13 +51,31 @@ app.get('/thankyou', (req, res) => {
     res.render('thankyou')
 })
 
-app.get('/api/names', async (req, res) => {
+app.get('/api/schedules/getNames', async (req, res) => {
     // TODO access: organizer only
     const year = req.query.year;
     const weekNum = req.query.weeknum;
     if (!year || !weekNum) return res.sendStatus(400) // bad request
     const availableNames = await Schedule.find({weekNum, year}, {'name': 1, '_id': 1})
     res.send(availableNames)
+})
+
+app.get('/api/schedules/getWeeks', async (req, res) => {
+    // TODO access: organizer only
+    const year = req.query.year;
+    if (!year) return res.sendStatus(400) // bad request
+    let availableWeeks = await Schedule.find({year}, {'weekNum': 1, '_id': 0})
+    availableWeeks = availableWeeks.map(item => item.weekNum)
+    availableWeeks = [...new Set(availableWeeks)].sort(function(a, b) { return a - b });
+    res.send(availableWeeks)
+})
+
+app.get('/api/schedules/getYears', async (req, res) => {
+    // TODO access: organizer only
+    let availableYears = await Schedule.find({}, {'year': 1, '_id': 0})
+    availableYears = availableYears.map(item => item.year)
+    availableYears = [...new Set(availableYears)].sort(function(a, b) { return a - b });
+    res.send(availableYears)
 })
 
 app.get('/api/schedules', async (req, res) => {
