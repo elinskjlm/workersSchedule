@@ -17,8 +17,8 @@ const /*NEW*/namesField = document.getElementById('names-field');
 const /*NEW*/yearsList = document.getElementById('years-list');
 const /*NEW*/weeksList = document.getElementById('weeks-list');
 const /*NEW*/namesList = document.getElementById('names-list');
-const /*NEW*/updateNamesBtn = document.getElementById('update-names-button')
-const /*NEW*/updateFormBtn = document.getElementById('update-form-button')
+// const /*NEW*/updateNamesBtn = document.getElementById('update-names-button')
+// const /*NEW*/updateFormBtn = document.getElementById('update-form-button')
 
 const /*BOTH*/resetButton = document.getElementById('resetButton');
 
@@ -365,8 +365,8 @@ window.addEventListener('load', async () => {
 
 document.addEventListener('click', e => /*OLD*/closeOpenedLists(e))
 
-/*NEW*/updateNamesBtn.addEventListener('click', () => /*NEW*/refreshNames())
-/*NEW*/updateFormBtn.addEventListener('click', () => /*BOTH*/fetchAndLoadForm(namesField.dataset.id))
+// /*NEW*/updateNamesBtn.addEventListener('click', () => /*NEW*/refreshNames())
+// /*NEW*/updateFormBtn.addEventListener('click', () => /*BOTH*/fetchAndLoadForm(namesField.dataset.id))
 /*NEW*/namesField.addEventListener('blur', () => /*NEW*/attachDataId())
 /*NEW*/namesField.addEventListener('blur', () => /*NEW*/fetchAndLoadForm(namesField.dataset.id))
 /*NEW*/namesField.addEventListener('input', () => /*NEW*/clearSchedule())
