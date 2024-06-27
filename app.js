@@ -2,7 +2,7 @@ const express =         require('express');
 const path =            require('path');
 const mongoose =        require('mongoose');
 const Schedule =        require('./models/schedule');
-const schedule =        require('./models/schedule');
+const { validateSchema } = require('./middleware');
 // const methodOverride =  require('method-override');
 const dbUrl =           'mongodb://localhost:27017/sidur';
 
@@ -84,7 +84,7 @@ app.get('/api/schedules', async (req, res) => {
     res.send(allSchedules)
 })
 
-app.post('/api/schedules', async (req, res) => {
+app.post('/api/schedules', validateSchema, async (req, res) => {
     // TODO access: users only?
     // TODO add validation!!
     const newSchedule = new Schedule(req.body);

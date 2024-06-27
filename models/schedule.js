@@ -67,7 +67,7 @@ const ScheduleSchema = new Schema({
     },
     comment: {
         type: String,
-        maxLength: [500, 'Comment max length is 500.']
+        maxLength: [250, 'Comment max length is 250.']
     },
     toIgnore: {
         type: Boolean,
