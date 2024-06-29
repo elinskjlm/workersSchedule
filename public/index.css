@@ -1,0 +1,33 @@
+.calendar {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    width: 350px;
+}
+.week:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+.day, .week-number {
+    height: 40px;
+    line-height: 40px;
+    width: 40px;
+    text-align: center;
+    display: inline-block;
+}
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+.muted {
+    color: #b0b0b0;
+}
+.separator {
+    border-right: 1px solid #dee2e6;
+    margin-right: 5px;
+}
+.constant-width {
+    min-width: 75px;
+}
