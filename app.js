@@ -27,6 +27,11 @@ app.get('/', (req, res) => {
     res.redirect('/formWorker')
 })
 
+app.get('/index', (req, res) => {
+    // TODO access: organizer only
+    res.render('index', { currentYear, currentWeek });
+})
+
 app.get('/formWorker', (req, res) => {
     // TODO access: users only?
     res.render('formWorker', { currentYear, currentWeek });

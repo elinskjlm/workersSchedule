@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week Number Picker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        .calendar {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            width: 350px;
+        }
+        .week:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        .day, .week-number {
+            height: 40px;
+            line-height: 40px;
+            width: 40px;
+            text-align: center;
+            display: inline-block;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .muted {
+            color: #b0b0b0;
+        }
+        .separator {
+            border-right: 1px solid #dee2e6;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <input type="text" id="weekInput" class="form-control" placeholder="Select week" readonly>
+        <div id="calendar" class="calendar border p-3 bg-white rounded shadow">
+            <div class="calendar-header mb-3">
+                <button id="prevMonth" class="btn btn-sm btn-primary">&lt;</button>
+                <div id="monthYear" class="fw-bold"></div>
+                <button id="nextMonth" class="btn btn-sm btn-primary">&gt;</button>
+            </div>
+            <div id="weeks">
+                <!-- Weeks will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const weekInput = document.getElementById('weekInput');
+        const calendar = document.getElementById('calendar');
+        const prevMonth = document.getElementById('prevMonth');
+        const nextMonth = document.getElementById('nextMonth');
+        const monthYear = document.getElementById('monthYear');
+        const weeksContainer = document.getElementById('weeks');
+
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+
+        weekInput.addEventListener('click', () => {
+            calendar.style.display = 'block';
+            createCalendar(currentYear, currentMonth);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!calendar.contains(e.target) && e.target !== weekInput) {
+                calendar.style.display = 'none';
+            }
+        });
+
+        prevMonth.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            createCalendar(currentYear, currentMonth);
+        });
+
+        nextMonth.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            createCalendar(currentYear, currentMonth);
+        });
+
+        const hebrewDays = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
+        const hebrewMonths = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+
+        function createCalendar(year, month) {
+            weeksContainer.innerHTML = '';
+            monthYear.innerText = `${hebrewMonths[month]} ${year}`;
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            let html = '<div class="d-flex">';
+            html += '<div class="week-number fw-bold">שבוע</div>';
+            html += '<div class="separator"></div>';
+            hebrewDays.forEach(day => {
+                html += `<div class="day fw-bold">${day}</div>`;
+            });
+            html += '</div>';
+
+            let day = 1;
+            let dayInNextMonth = 1;
+
+            for (let i = 0; i < 6; i++) { // weeks
+                let weekNum = getWeekNumber(new Date(year, month, day));
+                html += '<div class="d-flex week" data-week="' + weekNum + '" data-year="' + year + '">';
+                html += `<div class="week-number fw-bold">${weekNum}</div>`;
+                html += '<div class="separator"></div>';
+
+                for (let j = 0; j < 7; j++) { // days
+                    if (i === 0 && j < firstDayOfMonth) {
+                        html += `<div class="day muted">${daysInPrevMonth - firstDayOfMonth + j + 1}</div>`;
+                    } else if (day > daysInMonth) {
+                        html += `<div class="day muted">${dayInNextMonth++}</div>`;
+                    } else {
+                        html += `<div class="day">${day}</div>`;
+                        day++;
+                    }
+                }
+                html += '</div>';
+                if (day > daysInMonth && (i > 0 || (i === 0 && firstDayOfMonth === 0))) break;
+            }
+
+            weeksContainer.innerHTML = html;
+
+            document.querySelectorAll('.week').forEach(week => {
+                week.addEventListener('click', function() {
+                    weekInput.value = this.getAttribute('data-week') + ',' + this.getAttribute('data-year');
+                    calendar.style.display = 'none';
+                });
+            });
+        }
+
+        function getWeekNumber(date) {
+            const startOfYear = new Date(date.getFullYear(), 0, 1);
+            const days = Math.floor((date - startOfYear) / (24 * 60 * 60 * 1000));
+            return Math.ceil((days + startOfYear.getDay() + 1) / 7);
+        }
+
+        createCalendar(currentYear, currentMonth);
+    </script>
+</body>
+</html>
