@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.get('/index', (req, res) => {
     // TODO access: organizer only
-    res.render('index', { currentYear, currentWeek });
+    res.render('partials/weekPicker', { currentYear, currentWeek });
 })
 
 app.get('/formWorker', (req, res) => {
