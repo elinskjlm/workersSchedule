@@ -1,13 +1,13 @@
-const weekInput = document.getElementById('weekInput');
-const calendar = document.getElementById('calendar');
-const prevYear = document.getElementById('prevYear');
-const nextYear = document.getElementById('nextYear');
-const prevMonth = document.getElementById('prevMonth');
-const nextMonth = document.getElementById('nextMonth');
-const yearDisplay = document.getElementById('yearDisplay');
-const monthDisplay = document.getElementById('monthDisplay');
-const weeksContainer = document.getElementById('weeks');
-const todayButton = document.getElementById('todayButton');
+const weekInput =       document.getElementById('weekInput');
+const calendar =        document.getElementById('calendar');
+const prevYear =        document.getElementById('prevYear');
+const nextYear =        document.getElementById('nextYear');
+const prevMonth =       document.getElementById('prevMonth');
+const nextMonth =       document.getElementById('nextMonth');
+const yearDisplay =     document.getElementById('yearDisplay');
+const monthDisplay =    document.getElementById('monthDisplay');
+const weeksContainer =  document.getElementById('weeks');
+const todayButton =     document.getElementById('todayButton');
 
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
@@ -120,8 +120,14 @@ function createCalendar(year, month) {
 
     document.querySelectorAll('.week').forEach(week => {
         week.addEventListener('click', function() {
-            weekInput.value = this.getAttribute('data-week') + ',' + this.getAttribute('data-year');
+            const chosenYear = this.getAttribute('data-year')
+            const chosenWeek = this.getAttribute('data-week');
+            weekInput.value = chosenWeek + ',' + chosenYear;
+            weekInput.dataset.week = chosenWeek;
+            weekInput.dataset.year = chosenYear;
             calendar.style.display = 'none';
+            const change = new Event('change', { bubbles: true });
+            weekInput.dispatchEvent(change);
         });
     });
 }
