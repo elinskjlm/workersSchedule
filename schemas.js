@@ -43,4 +43,11 @@ module.exports.scheduleSchema = Joi.object({
     // isOpen:         Joi.boolean().required().default(true),
 }).required()
 
+module.exports.formSchema = Joi.object({
+    timeCreated:    Joi.date().default(Date.now).required(),
+    year:           Joi.number().required().min(2020).max(2120),
+    weekNum:        Joi.number().required().min(1).max(53),
+    isLive:         Joi.boolean().required().default(false),
+}).required()
+
 

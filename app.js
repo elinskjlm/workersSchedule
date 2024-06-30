@@ -1,10 +1,12 @@
-const express =         require('express');
-const path =            require('path');
-const mongoose =        require('mongoose');
-const Schedule =        require('./models/schedule');
-const { validateSchema } = require('./middleware');
-// const methodOverride =  require('method-override');
-const dbUrl =           'mongodb://localhost:27017/sidur';
+const express = require('express');
+const path = require('path');
+const mongoose = require('mongoose');
+const Schedule = require('./models/schedule');
+const Form = require('./models/form');
+const { validateSchema, validateForm } = require('./middleware');
+const dbUrl = 'mongodb://localhost:27017/sidur';
+
+const formLive = false;
 
 const app = express();
 
@@ -23,13 +25,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
 
+/* ##################### / ######################### */
+
+
 app.get('/', (req, res) => {
     res.redirect('/formWorker')
 })
 
 app.get('/index', (req, res) => {
     // TODO access: organizer only
-    res.render('partials/weekPicker', { currentYear, currentWeek });
+    res.render('index', { currentYear, currentWeek });
 })
 
 app.get('/formWorker', (req, res) => {
@@ -44,49 +49,94 @@ app.get('/formToggle', (req, res) => {
 
 app.get('/allForms', (req, res) => {
     // TODO access: organizer only
-    const minYear = 2020;
-    const durationYears = 20;
-    const weeks = Array(53).fill().map((_, i) => i + 1);
-    const years = Array(durationYears).fill().map((_, i) => i + minYear);
-
-    res.render('allForms', { weeks, years, currentYear, currentWeek })
+    res.render('allForms')
 })
 
 app.get('/thankyou', (req, res) => {
     res.render('thankyou')
 })
 
+/* ################## /api/forms ##################### */
+
+app.get('/api/forms', async (req, res) => {
+    const params = {}
+    // if (req.query.status === 'on') {
+    //     params.isLive = true;
+    // } else if (req.query.status === 'off') {
+    //     params.isLive = false;
+    // }
+    switch (req.query.status) {
+        case 'on':  params.isLive = true;  break;
+        case 'off': params.isLive = false; break;
+        default: break;
+    }
+    const allForms = await Form.find(params)
+    res.json(allForms)
+})
+
+app.post('/api/forms', validateForm, async (req, res) => {
+    // TODO access: organizer only
+    const newForm = new Form(req.body);
+    await newForm.save();
+    res.json(newForm);
+})
+
+app.patch('/api/forms/:id', async (req, res) => {
+    // // TODO access: organizer only // TODO DRY
+    const { id } = req.params;
+    let form = 'nananna';
+    switch (req.body.status) {
+        case 'on':
+            form = await Form.findByIdAndUpdate(id, { isLive: true }, { runValidators: true, new: true });
+            break;
+
+        case 'off':
+            form = await Form.findByIdAndUpdate(id, { isLive: false }, { runValidators: true, new: true });
+            break;
+
+        default: break;
+    }
+    return res.json(form)
+})
+
+app.delete('/api/forms/:id', async (req, res) => {
+    // TODO
+})
+
+
+/* ############### /api/schedules ################## */
+
 app.get('/api/schedules/getNames', async (req, res) => {
     // TODO access: organizer only
     const year = req.query.year;
     const weekNum = req.query.weeknum;
     if (!year || !weekNum) return res.sendStatus(400) // bad request
-    const availableNames = await Schedule.find({weekNum, year}, {'name': 1, '_id': 1})
-    res.send(availableNames)
+    const availableNames = await Schedule.find({ weekNum, year }, { 'name': 1, '_id': 1 })
+    res.json(availableNames)
 })
 
 app.get('/api/schedules/getWeeks', async (req, res) => {
     // TODO access: organizer only
     const year = req.query.year;
     if (!year) return res.sendStatus(400) // bad request
-    let availableWeeks = await Schedule.find({year}, {'weekNum': 1, '_id': 0})
+    let availableWeeks = await Schedule.find({ year }, { 'weekNum': 1, '_id': 0 })
     availableWeeks = availableWeeks.map(item => item.weekNum)
-    availableWeeks = [...new Set(availableWeeks)].sort(function(a, b) { return a - b });
-    res.send(availableWeeks)
+    availableWeeks = [...new Set(availableWeeks)].sort(function (a, b) { return a - b });
+    res.json(availableWeeks)
 })
 
 app.get('/api/schedules/getYears', async (req, res) => {
     // TODO access: organizer only
-    let availableYears = await Schedule.find({}, {'year': 1, '_id': 0})
+    let availableYears = await Schedule.find({}, { 'year': 1, '_id': 0 })
     availableYears = availableYears.map(item => item.year)
-    availableYears = [...new Set(availableYears)].sort(function(a, b) { return a - b });
-    res.send(availableYears)
+    availableYears = [...new Set(availableYears)].sort(function (a, b) { return a - b });
+    res.json(availableYears)
 })
 
 app.get('/api/schedules', async (req, res) => {
     // TODO access: organizer only
     const allSchedules = await Schedule.find({})
-    res.send(allSchedules)
+    res.json(allSchedules)
 })
 
 app.post('/api/schedules', validateSchema, async (req, res) => {
@@ -97,29 +147,11 @@ app.post('/api/schedules', validateSchema, async (req, res) => {
     return res.json({ redirect: '/thankyou' });
 })
 
-app.get/*OLD*/('/api/schedules/byName', async (req, res) => {
-    // TODO access: organizer only
-    const { year, weekNum, name } = req.query
-    const result = await Schedule.find({
-        year,
-        weekNum,
-    })
-    for (let schedule of result) { 
-        console.log(schedule.name, name)
-        if (schedule.name == name) {
-            // return res.send(schedule)
-        } else {
-            // return res.send('I AM A BIG LOSER')
-        }
-    }
-    return res.send('FUCK THIS RTL PROBLEMS !!')
-})
-
 app.get('/api/schedules/:id', async (req, res) => {
     // TODO access: organizer only
     const { id } = req.params
     const result = await Schedule.findById(id)
-    res.send(result)
+    res.json(result)
 })
 
 app.patch('/api/schedules/:id', async (req, res) => {
@@ -132,6 +164,8 @@ app.delete('/api/schedules/:id', async (req, res) => {
     // TODO access: admin only
     res.send('DELETE /api/schedules/:id'); // TODO
 })
+
+/* ############### -------------- ################## */
 
 app.listen(8080, () => {
     console.log('listeningggg');
