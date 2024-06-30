@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const daySchema = new Schema({
+const DaySchema = new Schema({
     morning: {
         reg: {
             type: Boolean,
@@ -57,13 +57,13 @@ const ScheduleSchema = new Schema({
         required: [true, `Field 'name' is missing in this entry: id: ${this._id}`]
     },
     schedule: {
-        day1: { type: daySchema, required: true },
-        day2: { type: daySchema, required: true },
-        day3: { type: daySchema, required: true },
-        day4: { type: daySchema, required: true },
-        day5: { type: daySchema, required: true },
-        day6: { type: daySchema, required: true },
-        day7: { type: daySchema, required: true }
+        day1: { type: DaySchema, required: true },
+        day2: { type: DaySchema, required: true },
+        day3: { type: DaySchema, required: true },
+        day4: { type: DaySchema, required: true },
+        day5: { type: DaySchema, required: true },
+        day6: { type: DaySchema, required: true },
+        day7: { type: DaySchema, required: true }
     },
     comment: {
         type: String,
