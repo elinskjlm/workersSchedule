@@ -32,9 +32,14 @@ app.get('/', (req, res) => {
     res.redirect('/formWorker')
 })
 
-app.get('/index', (req, res) => {
+app.get('/formsControl', (req, res) => {
     // TODO access: organizer only
-    res.render('index', { currentYear, currentWeek });
+    res.render('formsControl');
+})
+
+app.get('/allSchedules', (req, res) => {
+    // TODO access: organizer only
+    res.render('allSchedules');
 })
 
 app.get('/formWorker', (req, res) => {
@@ -47,12 +52,12 @@ app.get('/formToggle', (req, res) => {
     res.render('formToggle')
 })
 
-app.get('/allForms', (req, res) => {
+app.get('/readForm', (req, res) => {
     // TODO access: organizer only
-    res.render('allForms')
+    res.render('readForm')
 })
 
-app.get('/thankyou', (req, res) => {
+app.get('/thankYou', (req, res) => {
     res.render('thankyou')
 })
 
@@ -84,23 +89,20 @@ app.post('/api/forms', validateForm, async (req, res) => {
 app.patch('/api/forms/:id', async (req, res) => {
     // // TODO access: organizer only // TODO DRY
     const { id } = req.params;
-    let form = 'nananna';
-    switch (req.body.status) {
-        case 'on':
-            form = await Form.findByIdAndUpdate(id, { isLive: true }, { runValidators: true, new: true });
-            break;
-
-        case 'off':
-            form = await Form.findByIdAndUpdate(id, { isLive: false }, { runValidators: true, new: true });
-            break;
-
-        default: break;
+    if (['on', 'off'].includes(req.body.status)){
+        const isLive = req.body.status === 'on' ? true : false;
+        const form = await Form.findByIdAndUpdate(id, { isLive }, { runValidators: true, new: true });
+        return res.json(form)
+    } else {
+        return res.json({ error: 'only "on" or "off"'}) // TODO
     }
-    return res.json(form)
 })
 
 app.delete('/api/forms/:id', async (req, res) => {
-    // TODO
+    const { id } = req.params;
+    const result = await Form.findByIdAndDelete(id)
+    console.log('TODO delete')
+    res.json(result)
 })
 
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,16 +10,24 @@
     <link href="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/styles/choices.min.css" rel="stylesheet">
     <link href="styles/allForms.css" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container my-3 border border-info rounded">
-        <div class="row d-flex align-items-center">
+    <main class="container my-3">
+        <div class="container my-3">
+            <h1 class="text-center">ניהול סידורים</h1>
+        </div>
+        <div class="row d-flex align-items-center  border border-info rounded">
+            <div class="col-2 p-2 d-flex justify-content-center">
+                <h5>סינון סידורים</h5>
+            </div>
+        </div>
+        <div class="row d-flex align-items-center  border border-info rounded">
             <div class="col-2 p-2 d-flex justify-content-center">
                 <div class="btn-group-vertical btn-group-sm" role="group"
                     aria-label="Vertical radio toggle button group">
                     <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off">
                     <label class="btn btn-outline-primary" for="vbtn-radio1">רק קבועים</label>
-                    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off"
-                        checked>
+                    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off" checked>
                     <label class="btn btn-outline-primary" for="vbtn-radio2">לא משנה</label>
                     <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off">
                     <label class="btn btn-outline-primary" for="vbtn-radio3">רק לא קבועים</label>
@@ -54,10 +63,10 @@
             <div class="col-2 p-2 d-flex justify-content-center">
                 <%- include('./partials/weekPicker') %>
             </div>
-            
+
 
         </div>
-    </div>
+    </main>
     <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script> -->
@@ -68,5 +77,7 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script> -->
+    <!-- <script src="styles/allSchedules.js"></script> -->
 </body>
+
 </html>
