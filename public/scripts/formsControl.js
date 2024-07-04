@@ -26,23 +26,30 @@ function createActionButtons(i, formId, isLive) {
         let name;
         let type;
         let action;
+        let toCheck;
         switch (role) {
             case "on":
                 id = `btnOn[${i}]`;
                 text = "זמין";
                 color = "info";
-                name = `radio[${i}]`;
-                type = "radio";
+                // name = `radio[${i}]`;
+                name = `toggle[${i}]`; // TODO type?
+                // type = "radio";
+                type = "checkbox"; // TODO type?
                 action = toggleState;
+                toCheck = isLive;
                 break;
 
             case "off":
                 id = `btnOff[${i}]`;
                 text = "כבוי";
                 color = "secondary";
-                name = `radio[${i}]`;
-                type = "radio";
+                // name = `radio[${i}]`;
+                name = `toggle[${i}]`; // TODO type?
+                // type = "radio";
+                type = "checkbox"; // TODO type?
                 action = toggleState;
+                toCheck = !isLive;
                 break;
 
             case "del":
@@ -52,6 +59,7 @@ function createActionButtons(i, formId, isLive) {
                 name = `del[${i}]`;
                 type = "checkbox";
                 action = deleteForm;
+                toCheck = false;
                 break;
 
             default:
@@ -65,16 +73,15 @@ function createActionButtons(i, formId, isLive) {
             id,
             autocomplete: "off",
         }
+        
         const input = setAttributes(document.createElement('input'), inputAttr)
+        if (toCheck) input.checked = true;
         input.addEventListener('click', (e) => {
-            // e.stopPropagation(); // TODO make radio update only after confirm TODO maybe change radio to buttons!!
-            action(formId, role);
+            input.checked ? action(formId, role) : e.preventDefault();
         })
 
-        role === "on" ? input.checked = isLive : input.checked = !isLive // TODO for DEL
-
         const labelAttributes = {
-            class: `btn btn-sm btn-outline-${color}`,
+            class: `btn btn-sm btn-outline-${color} ${role==='del'?'ms-3':''}`,
             for: id,
         }
         const label = setAttributes(document.createElement('label'), labelAttributes)
@@ -97,7 +104,7 @@ function createActionButtons(i, formId, isLive) {
     const toggleGroup = setAttributes(document.createElement('div'), groupAttribues)
     toggleGroup.append(offInput, offLabel, onInput, onLabel)
     const wrapDiv = document.createElement('div');
-    wrapDiv.classList.add('d-flex', 'justify-content-between');
+    wrapDiv.classList.add('d-flex');
     wrapDiv.append(toggleGroup, delInput, delLabel);
     return wrapDiv;
 }
