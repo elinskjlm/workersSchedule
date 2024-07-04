@@ -1,9 +1,12 @@
-const loadBtn = document.getElementById('loadBtn');
+
 const tbody = document.getElementById('tbody');
 
-loadBtn.addEventListener('click', async () => {
-    loadFormsTable()
+document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
+    btn.addEventListener('click', () => loadFormsTable())
 })
+
+loadFormsTable()
+
 
 async function fetchForms() {
     const status = document.querySelector('input[name="radio-filter"]:checked').value;
@@ -111,7 +114,6 @@ function createActionButtons(i, formId, isLive) {
 
 async function loadFormsTable() {
     const forms = await fetchForms();
-    console.dir(forms)
     tbody.innerHTML = '';
     forms.forEach((form, i) => {
         const tr = document.createElement('tr');
@@ -141,7 +143,6 @@ async function toggleState(id, set) {
         },
         body: JSON.stringify({ status: set }),
     })
-    console.dir(await res.json());
     loadFormsTable()
     return res
 }
