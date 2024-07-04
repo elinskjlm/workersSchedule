@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { weeknumToDates } = require('../utils/weekDate');
+
+const opts = { toJSON: { virtuals: true } }
 
 const FormSchema = new Schema({
     timeCreated: {
@@ -22,6 +25,10 @@ const FormSchema = new Schema({
         type: Boolean,
         default: false
     },
+}, opts)
+
+FormSchema.virtual('dates').get(function() {
+    return weeknumToDates(this.year, this.weekNum)
 })
 
 module.exports = mongoose.model('Form', FormSchema);
