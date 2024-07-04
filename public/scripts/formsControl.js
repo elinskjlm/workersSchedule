@@ -115,8 +115,8 @@ async function loadFormsTable() {
             <td>${form._id.slice(-5)}...</td>
             <td>${form.year}</td>
             <td>${form.weekNum}</td>
-            <td><div>lala</div></td>
-            <td>idc</td>
+            <td>${form.dates.startDate}</td>
+            <td>${form.dates.endDate}</td>
             <td id="actions[${i}]"></td>
             <td><a href="#">לינק</a></td>
         `;
