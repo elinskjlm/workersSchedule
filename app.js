@@ -37,19 +37,14 @@ app.get('/formsControl', (req, res) => {
     res.render('formsControl');
 })
 
-app.get('/allSchedules', (req, res) => {
+app.get('/schedulesControl', (req, res) => {
     // TODO access: organizer only
-    res.render('allSchedules');
+    res.render('schedulesControl');
 })
 
 app.get('/formWorker', (req, res) => {
     // TODO access: users only?
     res.render('formWorker', { currentYear, currentWeek });
-})
-
-app.get('/formToggle', (req, res) => {
-    // TODO access: organizer only
-    res.render('formToggle')
 })
 
 app.get('/readForm', (req, res) => {
