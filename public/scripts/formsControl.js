@@ -34,7 +34,7 @@ function createActionButtons(i, formId, isLive) {
             case "on":
                 id = `btnOn[${i}]`;
                 text = "זמין";
-                color = "info";
+                color = "primary";
                 // name = `radio[${i}]`;
                 name = `toggle[${i}]`; // TODO type?
                 // type = "radio";
