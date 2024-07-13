@@ -5,7 +5,14 @@ const optionMap = new Map();
 // const calendar =    document.getElementById('calendar'); // Defined already in weekPicker.js
 const namesField =  document.getElementById('names-field');
 const namesList =   document.getElementById('names-list');
-const resetButton = document.getElementById('resetButton');
+// const resetButton = document.getElementById('resetButton');
+
+const weekNum = weekNumData;
+const year = yearData;
+const scheduleId = scheduleIdData;
+console.log('💢💢💢💢💢')
+console.log(weekNum, year, scheduleId)
+console.log('💢💢💢💢💢')
 
 // ----Week to names-----
 async function getAvailableNames() {
@@ -59,6 +66,7 @@ async function fetchAndLoadForm(id = '') {
     if (!id) return false;
     const wrappedSchedule = await fetchSchedule(id);
     loadSchedule(wrappedSchedule);
+    if (!namesField.value) namesField.value = wrappedSchedule.name;
     return;
 }
 
@@ -148,5 +156,11 @@ weekInput.addEventListener('change', () => refreshNames())
 namesField.addEventListener('blur', () => attachDataId())
 namesField.addEventListener('blur', () => fetchAndLoadForm(namesField.dataset.id))
 namesField.addEventListener('input', () => clearSchedule())
-resetButton.addEventListener('click', () => clearSchedule())
+// resetButton.addEventListener('click', () => clearSchedule())
+
+weekInput.value = (weekNum && year) ? `${weekNum},${year}`: ``;
+weekInput.dataset.week = weekNum;
+weekInput.dataset.year = year;
+refreshNames()
+fetchAndLoadForm(scheduleId)
 
