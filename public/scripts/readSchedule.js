@@ -10,13 +10,9 @@ const namesList =   document.getElementById('names-list');
 const weekNum = weekNumData;
 const year = yearData;
 const scheduleId = scheduleIdData;
-console.log('💢💢💢💢💢')
-console.log(weekNum, year, scheduleId)
-console.log('💢💢💢💢💢')
 
 // ----Week to names-----
 async function getAvailableNames() {
-    console.log('hasjfbck')
     const chosenWeek = weekInput.dataset.week;
     const chosenYear = weekInput.dataset.year;
     if (weekInput.value) {
@@ -25,7 +21,6 @@ async function getAvailableNames() {
             weeknum: chosenWeek
         }))
         const availableNames = await response.json()
-        console.dir(availableNames)
         return availableNames;
     }
 }
