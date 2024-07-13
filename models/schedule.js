@@ -86,7 +86,15 @@ const ScheduleSchema = new Schema({
 }, opts)
 
 ScheduleSchema.virtual('shortId').get(function() {
-    return `${this._id.toString().slice(-5)}...`
+    return `${this._id?.toString().slice(-5)}...`
+})
+
+ScheduleSchema.virtual('dateDay').get(function() {
+    return `${this.timeSubmitted?.getDate().toString().padStart(2, '0')}/${(this.timeSubmitted?.getMonth()+1).toString().padStart(2, '0')}`
+})
+
+ScheduleSchema.virtual('dateHour').get(function() {
+    return `${this.timeSubmitted?.getHours().toString().padStart(2, '0')}:${this.timeSubmitted?.getMinutes().toString().padStart(2, '0')}`
 })
 
 module.exports = mongoose.model('Schedule', ScheduleSchema);

@@ -127,12 +127,13 @@ async function loadSchedulesTable() {
             <td>${schedule.year}</td>
             <td>${schedule.weekNum}</td>
             <td>${schedule.name}</td>
-            <td>TODO?</td>
+            <td>${schedule.dateDay}, <small class="text-muted text-sm">${schedule.dateHour}</small></td>
             <td id="actions[${i}]"></td>
             <td><a href="/readSchedule?scheduleid=${schedule._id}" target="_blank">פתיחה</a></td>
         `;
         tbody.appendChild(tr);
         document.getElementById(`actions[${i}]`).append(actions)
+        console.dir(schedule)
     });
 }
 
