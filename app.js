@@ -47,10 +47,43 @@ app.get('/formWorker', (req, res) => {
     res.render('formWorker', { currentYear, currentWeek });
 })
 
-app.get('/readForm', (req, res) => {
+app.get('/readSchedule', async (req, res) => {
     // TODO access: organizer only
-    res.render('readForm')
+    const formId = req.query.formid || '';
+    const scheduleId = req.query.scheduleid || '';
+    if (formId && scheduleId) { // TODO think about it , DRY
+        return res.render('readSchedule', { weekNum: '', year: '', scheduleId: '' })
+    } else if (formId) {
+        try { // TEMP TODO permanent
+            const form = await Form.findById(formId);
+            const { weekNum='', year='' } = form; // TODO pass also the names? ugh
+            return res.render('readSchedule', { weekNum, year, scheduleId })
+            
+        } catch (error) {
+            return res.json(error)
+        }
+    } else if (scheduleId) {
+        try {
+            const schedule = await Schedule.findById(scheduleId);
+            const { weekNum='', year='' } = schedule; 
+            return res.render('readSchedule', { weekNum, year, scheduleId }) // TODO DRY
+        } catch (error) {
+            return res.json(error)
+        }
+
+    } else {
+        return res.render('readSchedule', { weekNum: '', year: '', scheduleId: '' })
+    }
 })
+
+// app.get('/readSchedule/:id', async (req, res) => {
+//     // TODO access: organizer only
+//     const id = req.params.id;
+//     const form = await Form.findById(id);
+//     console.log(form)
+//     const { weekNum, year } = form;
+//     res.render('readSchedule', { weekNum, year })
+// })
 
 app.get('/thankYou', (req, res) => {
     res.render('thankyou')
@@ -96,7 +129,6 @@ app.patch('/api/forms/:id', async (req, res) => {
 app.delete('/api/forms/:id', async (req, res) => {
     const { id } = req.params;
     const result = await Form.findByIdAndDelete(id)
-    console.log('TODO delete')
     res.json(result)
 })
 
@@ -132,7 +164,22 @@ app.get('/api/schedules/getYears', async (req, res) => {
 
 app.get('/api/schedules', async (req, res) => {
     // TODO access: organizer only
-    const allSchedules = await Schedule.find({})
+    const params = {}
+    switch (req.query.onlyOpen) {
+        case 'on':  params.isOpen = true;  break;
+        case 'off': params.isOpen = false; break;
+        default: break;
+    }
+    // switch (req.query.onlyPermanent) { /* For future use */
+    //     case 'on':  params.isPermanent = true;  break;
+    //     case 'off': params.isPermanent = false; break;
+    //     default: break;
+    // }
+    if (req.query.weekNum != 'undefined'  && req.query.year != 'undefined') {
+        params.weekNum = req.query.weekNum;
+        params.year = req.query.year;
+    }
+    const allSchedules = await Schedule.find(params);
     res.json(allSchedules)
 })
 
@@ -154,12 +201,20 @@ app.get('/api/schedules/:id', async (req, res) => {
 app.patch('/api/schedules/:id', async (req, res) => {
     // TODO access: organizer only
     // TODO add validation!!
-    res.send('PATCH /api/schedules/:id'); // TODO
+    const { id } = req.params;
+    if (['on', 'off'].includes(req.body.open)){
+        const isOpen = req.body.open === 'on' ? true : false;
+        const schedule = await Schedule.findByIdAndUpdate(id, { isOpen }, { runValidators: true, new: true });
+        return res.json(schedule)
+    } else {
+        return res.json({ error: 'only "on" or "off"'}) // TODO
+    }
 })
 
 app.delete('/api/schedules/:id', async (req, res) => {
-    // TODO access: admin only
-    res.send('DELETE /api/schedules/:id'); // TODO
+    const { id } = req.params;
+    const result = await Schedule.findByIdAndDelete(id)
+    res.json(result)
 })
 
 /* ############### -------------- ################## */
