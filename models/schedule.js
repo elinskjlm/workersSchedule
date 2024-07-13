@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const opts = { toJSON: { virtuals: true } }
+
 const DaySchema = new Schema({
     morning: {
         reg: {
@@ -81,7 +83,10 @@ const ScheduleSchema = new Schema({
         type: Boolean,
         default: true
     }
-})
+}, opts)
 
+ScheduleSchema.virtual('shortId').get(function() {
+    return `${this._id.toString().slice(-5)}...`
+})
 
 module.exports = mongoose.model('Schedule', ScheduleSchema);

@@ -31,4 +31,8 @@ FormSchema.virtual('dates').get(function() {
     return weeknumToDates(this.year, this.weekNum)
 })
 
+FormSchema.virtual('shortId').get(function() {
+    return `${this._id.toString().slice(-5)}...`
+})
+
 module.exports = mongoose.model('Form', FormSchema);
