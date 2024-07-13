@@ -8,6 +8,7 @@ const yearDisplay =     document.getElementById('yearDisplay');
 const monthDisplay =    document.getElementById('monthDisplay');
 const weeksContainer =  document.getElementById('weeks');
 const todayButton =     document.getElementById('todayButton');
+const resetWeekButton =     document.getElementById('resetWeekButton');
 
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
@@ -64,6 +65,17 @@ todayButton.addEventListener('click', () => {
     currentMonth = today.getMonth();
     yearDisplay.innerText = currentYear;
     createCalendar(currentYear, currentMonth);
+});
+
+resetWeekButton.addEventListener('click', () => {
+    // const today = new Date();
+    // currentYear = today.getFullYear();
+    // currentMonth = today.getMonth();
+    // yearDisplay.innerText = currentYear;
+    // createCalendar(currentYear, currentMonth);
+    weekInput.value = '';
+    delete weekInput.dataset.week;
+    delete weekInput.dataset.year;
 });
 
 const hebrewDays = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
