@@ -2,18 +2,18 @@
 const tbody = document.getElementById('tbody');
 
 document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
-    btn.addEventListener('click', () => loadFormsTable())
+    btn.addEventListener('click', () => loadSchedulesTable())
 })
 
-loadFormsTable()
-
-
-async function fetchForms() {
-    const status = document.querySelector('input[name="radio-filter"]:checked').value;
-    const params = new URLSearchParams({ status })
-    const result = await fetch('/api/forms?' + params);
-    const forms = await result.json();
-    return forms
+async function fetchSchedules() {
+    const onlyOpen = document.querySelector('input[name="radio-open"]:checked').value;
+    const onlyPermanent = document.querySelector('input[name="radio-permanent"]:checked').value;
+    const weekNum = weekInput.dataset.week;
+    const year = weekInput.dataset.year;
+    const params = new URLSearchParams({ onlyOpen, onlyPermanent, weekNum, year })
+    const result = await fetch('/api/schedules?' + params);
+    const schedules = await result.json();
+    return schedules
 }
 
 function setAttributes(element, attributes) {
@@ -21,8 +21,8 @@ function setAttributes(element, attributes) {
     return element;
 }
 
-function createActionButtons(i, formId, isLive) {
-    function createInput(role, formId, isLive = undefined) {
+function createActionButtons(i, scheduleId, isOpen) {
+    function createInput(role, scheduleId, isOpen = undefined) {
         let id;
         let text;
         let color;
@@ -33,26 +33,26 @@ function createActionButtons(i, formId, isLive) {
         switch (role) {
             case "on":
                 id = `btnOn[${i}]`;
-                text = "זמין";
+                text = "פתוח";
                 color = "info";
                 // name = `radio[${i}]`;
                 name = `toggle[${i}]`; // TODO type?
                 // type = "radio";
                 type = "checkbox"; // TODO type?
                 action = toggleState;
-                toCheck = isLive;
+                toCheck = isOpen;
                 break;
 
             case "off":
                 id = `btnOff[${i}]`;
-                text = "כבוי";
+                text = "סגור";
                 color = "secondary";
                 // name = `radio[${i}]`;
                 name = `toggle[${i}]`; // TODO type?
                 // type = "radio";
                 type = "checkbox"; // TODO type?
                 action = toggleState;
-                toCheck = !isLive;
+                toCheck = !isOpen;
                 break;
 
             case "del":
@@ -80,7 +80,7 @@ function createActionButtons(i, formId, isLive) {
         const input = setAttributes(document.createElement('input'), inputAttr)
         if (toCheck) input.checked = true;
         input.addEventListener('click', (e) => {
-            input.checked ? action(formId, role) : e.preventDefault();
+            input.checked ? action(scheduleId, role) : e.preventDefault();
         })
 
         const labelAttributes = {
@@ -95,9 +95,9 @@ function createActionButtons(i, formId, isLive) {
         return { input, label }
     }
 
-    const { input: offInput, label: offLabel } = createInput("off", formId, isLive);
-    const { input: onInput, label: onLabel } = createInput("on", formId, isLive);
-    const { input: delInput, label: delLabel } = createInput("del", formId);
+    const { input: offInput, label: offLabel } = createInput("off", scheduleId, isOpen);
+    const { input: onInput, label: onLabel } = createInput("on", scheduleId, isOpen);
+    const { input: delInput, label: delLabel } = createInput("del", scheduleId);
 
 
     const groupAttribues = {
@@ -114,23 +114,22 @@ function createActionButtons(i, formId, isLive) {
     return wrapDiv;
 }
 
-async function loadFormsTable() {
-    console.log('ff')
-    const forms = await fetchForms();
+async function loadSchedulesTable() {
+    const schedules = await fetchSchedules();
     tbody.innerHTML = '';
-    forms.forEach((form, i) => {
+    schedules.forEach((schedule, i) => {
         const tr = document.createElement('tr');
         tr.setAttribute('id', `tr[${i}]`);
-        const actions = createActionButtons(i, form._id, form.isLive)
+        const actions = createActionButtons(i, schedule._id, schedule.isOpen)
         tr.innerHTML = `
             <th>${i+1}</th>
-            <td>${form.shortId}</td>
-            <td>${form.year}</td>
-            <td>${form.weekNum}</td>
-            <td>${form.dates.startDate}</td>
-            <td>${form.dates.endDate}</td>
+            <td>${schedule.shortId}</td>
+            <td>${schedule.year}</td>
+            <td>${schedule.weekNum}</td>
+            <td>${schedule.name}</td>
+            <td>TODO?</td>
             <td id="actions[${i}]"></td>
-            <td><a href="#">לינק</a></td>
+            <td><a href="/readSchedule?scheduleid=${schedule._id}" target="_blank">פתיחה</a></td>
         `;
         tbody.appendChild(tr);
         document.getElementById(`actions[${i}]`).append(actions)
@@ -139,51 +138,35 @@ async function loadFormsTable() {
 
 async function toggleState(id, set) {
     if (!(['on', 'off'].includes(set))) throw new Error('only "on" or "off"')
-    const res = await fetch(`/api/forms/${id}?`, {
+    const res = await fetch(`/api/schedules/${id}?`, {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ status: set }),
+        body: JSON.stringify({ open: set }),
     })
-    loadFormsTable()
+    loadSchedulesTable()
     return res
 }
 
 function beforeDeleting(id, _) {
     const btnModalDel = document.getElementById('btnModalDel');
     btnModalDel.addEventListener('click', () => {
-        deleteForm(id, _)
+        deleteSchedule(id, _)
     }, { once: true })
 }
 
-async function deleteForm(id, _) {
-    const res = await fetch(`/api/forms/${id}?`, {
+async function deleteSchedule(id, _) {
+    const res = await fetch(`/api/schedules/${id}?`, {
         method: "DELETE"
     })
-    loadFormsTable()
+    loadSchedulesTable()
     return res
 }
 
-const newForm = document.getElementById("newBtn");
-newForm.addEventListener('click', async () => {
-    if (weekInput.value) {
-        const values = {
-            weekNum: weekInput.dataset.week,
-            year: weekInput.dataset.year,
-            isLive: false,
-            timeCreated: new Date(),
-        }
-
-        const result = await fetch(`/api/forms/`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-        })
-        loadFormsTable()
-        return result
-
-    }
+const updateButton = document.getElementById("update-button");
+updateButton.addEventListener('click', async () => {
+    loadSchedulesTable();
 })
+
+loadSchedulesTable()
