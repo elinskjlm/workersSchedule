@@ -1,5 +1,7 @@
 
 const tbody = document.getElementById('tbody');
+const navForm = document.getElementById('nav-form');
+navForm.classList.add('active');
 
 document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
     btn.addEventListener('click', () => loadFormsTable())

@@ -1,5 +1,7 @@
 
 const tbody = document.getElementById('tbody');
+const navSched = document.getElementById('nav-schedule');
+navSched.classList.add('active');
 
 document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
     btn.addEventListener('click', () => loadSchedulesTable())

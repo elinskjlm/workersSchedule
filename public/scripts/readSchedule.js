@@ -7,6 +7,9 @@ const namesField =  document.getElementById('names-field');
 const namesList =   document.getElementById('names-list');
 // const resetButton = document.getElementById('resetButton');
 
+const navRead = document.getElementById('nav-read');
+navRead.classList.add('active');
+
 const weekNum = weekNumData;
 const year = yearData;
 const scheduleId = scheduleIdData;
