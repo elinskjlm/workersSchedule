@@ -1,6 +1,6 @@
 const { scheduleSchema, formSchema } = require('./schemas')
 
-module.exports.validateSchema = (req, res, next) => {
+module.exports.validateSchedule = (req, res, next) => {
     const { error } = scheduleSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',\t');
