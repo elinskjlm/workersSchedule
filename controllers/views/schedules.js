@@ -1,4 +1,5 @@
-const Form = require('../../models/form');
+const Form =        require('../../models/form');
+const Schedule =    require('../../models/schedule');
 
 module.exports.renderSchedsControl = (req, res) => {
     res.render('schedulesControl')
