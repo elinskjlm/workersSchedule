@@ -124,7 +124,7 @@ form.addEventListener('submit', async (e) => {
   scheduleWrapper.comment = commentElement.value;
   const asStr = JSON.stringify(scheduleWrapper)
   try {
-    const response = await fetch('/api/schedules', {
+    const response = await fetch('/api/v1/schedules', {
       method: 'POST',
       body: asStr,
       headers: {

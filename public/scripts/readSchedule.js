@@ -19,7 +19,7 @@ async function getAvailableNames() {
     const chosenWeek = weekInput.dataset.week;
     const chosenYear = weekInput.dataset.year;
     if (weekInput.value) {
-        const response = await fetch('/api/schedules/getNames?' + new URLSearchParams({
+        const response = await fetch('/api/v1/schedules/getNames?' + new URLSearchParams({
             year: chosenYear,
             weeknum: chosenWeek
         }))
@@ -69,7 +69,7 @@ async function fetchAndLoadForm(id = '') {
 }
 
 async function fetchSchedule(id) {
-    const result = await fetch(`/api/schedules/${id}`)
+    const result = await fetch(`/api/v1/schedules/${id}`)
     const wrappedSchedule = await result.json();
     return wrappedSchedule;
 }

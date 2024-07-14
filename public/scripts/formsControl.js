@@ -13,7 +13,7 @@ loadFormsTable()
 async function fetchForms() {
     const status = document.querySelector('input[name="radio-filter"]:checked').value;
     const params = new URLSearchParams({ status })
-    const result = await fetch('/api/forms?' + params);
+    const result = await fetch('/api/v1/forms?' + params);
     const forms = await result.json();
     return forms
 }
@@ -146,7 +146,7 @@ async function loadFormsTable() {
 
 async function toggleState(id, set) {
     if (!(['on', 'off'].includes(set))) throw new Error('only "on" or "off"')
-    const res = await fetch(`/api/forms/${id}?`, {
+    const res = await fetch(`/api/v1/forms/${id}?`, {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json'
@@ -165,7 +165,7 @@ function beforeDeleting(id, _) {
 }
 
 async function deleteForm(id, _) {
-    const res = await fetch(`/api/forms/${id}?`, {
+    const res = await fetch(`/api/v1/forms/${id}?`, {
         method: "DELETE"
     })
     loadFormsTable()
@@ -182,7 +182,7 @@ newForm.addEventListener('click', async () => {
             timeCreated: new Date(),
         }
 
-        const result = await fetch(`/api/forms/`, {
+        const result = await fetch(`/api/v1/forms/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

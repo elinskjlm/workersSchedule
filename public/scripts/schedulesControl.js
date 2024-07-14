@@ -13,7 +13,7 @@ async function fetchSchedules() {
     const weekNum = weekInput.dataset.week;
     const year = weekInput.dataset.year;
     const params = new URLSearchParams({ onlyOpen, onlyPermanent, weekNum, year })
-    const result = await fetch('/api/schedules?' + params);
+    const result = await fetch('/api/v1/schedules?' + params);
     const schedules = await result.json();
     return schedules
 }
@@ -141,7 +141,7 @@ async function loadSchedulesTable() {
 
 async function toggleState(id, set) {
     if (!(['on', 'off'].includes(set))) throw new Error('only "on" or "off"')
-    const res = await fetch(`/api/schedules/${id}?`, {
+    const res = await fetch(`/api/v1/schedules/${id}?`, {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json'
@@ -160,7 +160,7 @@ function beforeDeleting(id, _) {
 }
 
 async function deleteSchedule(id, _) {
-    const res = await fetch(`/api/schedules/${id}?`, {
+    const res = await fetch(`/api/v1/schedules/${id}?`, {
         method: "DELETE"
     })
     loadSchedulesTable()

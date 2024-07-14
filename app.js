@@ -37,9 +37,9 @@ app.get('/readSchedule',    schedsView.renderReadSched)
 
 app.get('/thankYou',        othersView.renderThankyou)
 
-/* ################## /api/forms ##################### */
+/* ################## /api/v1/forms ##################### */
 
-app.get('/api/forms', async (req, res) => {
+app.get('/api/v1/forms', async (req, res) => {
     const params = {}
     // if (req.query.status === 'on') {
     //     params.isLive = true;
@@ -55,14 +55,14 @@ app.get('/api/forms', async (req, res) => {
     res.json(allForms)
 })
 
-app.post('/api/forms', validateForm, async (req, res) => {
+app.post('/api/v1/forms', validateForm, async (req, res) => {
     // TODO access: organizer only
     const newForm = new Form(req.body);
     await newForm.save();
     res.json(newForm);
 })
 
-app.patch('/api/forms/:id', async (req, res) => {
+app.patch('/api/v1/forms/:id', async (req, res) => {
     // // TODO access: organizer only // TODO DRY
     const { id } = req.params;
     if (['on', 'off'].includes(req.body.status)) {
@@ -74,16 +74,16 @@ app.patch('/api/forms/:id', async (req, res) => {
     }
 })
 
-app.delete('/api/forms/:id', async (req, res) => {
+app.delete('/api/v1/forms/:id', async (req, res) => {
     const { id } = req.params;
     const result = await Form.findByIdAndDelete(id)
     res.json(result)
 })
 
 
-/* ############### /api/schedules ################## */
+/* ############### /api/v1/schedules ################## */
 
-app.get('/api/schedules/getNames', async (req, res) => {
+app.get('/api/v1/schedules/getNames', async (req, res) => {
     // TODO access: organizer only
     const year = req.query.year;
     const weekNum = req.query.weeknum;
@@ -92,7 +92,7 @@ app.get('/api/schedules/getNames', async (req, res) => {
     res.json(availableNames)
 })
 
-app.get('/api/schedules/getWeeks', async (req, res) => {
+app.get('/api/v1/schedules/getWeeks', async (req, res) => {
     // TODO access: organizer only
     const year = req.query.year;
     if (!year) return res.sendStatus(400) // bad request
@@ -102,7 +102,7 @@ app.get('/api/schedules/getWeeks', async (req, res) => {
     res.json(availableWeeks)
 })
 
-app.get('/api/schedules/getYears', async (req, res) => {
+app.get('/api/v1/schedules/getYears', async (req, res) => {
     // TODO access: organizer only
     let availableYears = await Schedule.find({}, { 'year': 1, '_id': 0 })
     availableYears = availableYears.map(item => item.year)
@@ -110,7 +110,7 @@ app.get('/api/schedules/getYears', async (req, res) => {
     res.json(availableYears)
 })
 
-app.get('/api/schedules', async (req, res) => {
+app.get('/api/v1/schedules', async (req, res) => {
     // TODO access: organizer only
     const params = {}
     switch (req.query.onlyOpen) {
@@ -131,7 +131,7 @@ app.get('/api/schedules', async (req, res) => {
     res.json(allSchedules)
 })
 
-app.post('/api/schedules', validateSchema, async (req, res) => {
+app.post('/api/v1/schedules', validateSchema, async (req, res) => {
     // TODO access: users only?
     // TODO add validation!!
     const newSchedule = new Schedule(req.body);
@@ -139,14 +139,14 @@ app.post('/api/schedules', validateSchema, async (req, res) => {
     return res.json({ redirect: '/thankyou' });
 })
 
-app.get('/api/schedules/:id', async (req, res) => {
+app.get('/api/v1/schedules/:id', async (req, res) => {
     // TODO access: organizer only
     const { id } = req.params
     const result = await Schedule.findById(id)
     res.json(result)
 })
 
-app.patch('/api/schedules/:id', async (req, res) => {
+app.patch('/api/v1/schedules/:id', async (req, res) => {
     // TODO access: organizer only
     // TODO add validation!!
     const { id } = req.params;
@@ -159,7 +159,7 @@ app.patch('/api/schedules/:id', async (req, res) => {
     }
 })
 
-app.delete('/api/schedules/:id', async (req, res) => {
+app.delete('/api/v1/schedules/:id', async (req, res) => {
     const { id } = req.params;
     const result = await Schedule.findByIdAndDelete(id)
     res.json(result)
