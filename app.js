@@ -4,14 +4,10 @@ const mongoose = require('mongoose');
 const Schedule = require('./models/schedule');
 const Form = require('./models/form');
 const { validateSchema, validateForm } = require('./middleware');
+const { dateToWeeknum } = require('./utils/weekDate')
+
 const dbUrl = 'mongodb://localhost:27017/sidur';
-
-const formLive = false;
-
 const app = express();
-
-const currentYear = 2024 // TODO dynamic
-const currentWeek = 35 // TODO dynamic
 
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
@@ -44,7 +40,27 @@ app.get('/schedulesControl', (req, res) => {
 
 app.get('/formWorker', (req, res) => {
     // TODO access: users only?
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentWeek = dateToWeeknum(today);
     res.render('formWorker', { currentYear, currentWeek });
+})
+
+app.get('/formWorker/:id', async (req, res) => {
+    // TODO access: users only?
+    const id = req.params.id;
+    const form = await Form.findById(id)
+    if (form) {
+        const currentYear = form.year;
+        const currentWeek = form.weekNum - 1; // TODO
+        res.render('formWorker', { currentYear, currentWeek });
+    } else {
+        return res.redirect('/formWorker')
+    }
+    // const today = new Date();
+    // const currentYear = today.getFullYear();
+    // const currentWeek = dateToWeeknum(today);
+    // res.render('formWorker', { currentYear, currentWeek });
 })
 
 app.get('/readSchedule', async (req, res) => {
@@ -56,16 +72,16 @@ app.get('/readSchedule', async (req, res) => {
     } else if (formId) {
         try { // TEMP TODO permanent
             const form = await Form.findById(formId);
-            const { weekNum='', year='' } = form; // TODO pass also the names? ugh
+            const { weekNum = '', year = '' } = form; // TODO pass also the names? ugh
             return res.render('readSchedule', { weekNum, year, scheduleId })
-            
+
         } catch (error) {
             return res.json(error)
         }
     } else if (scheduleId) {
         try {
             const schedule = await Schedule.findById(scheduleId);
-            const { weekNum='', year='' } = schedule; 
+            const { weekNum = '', year = '' } = schedule;
             return res.render('readSchedule', { weekNum, year, scheduleId }) // TODO DRY
         } catch (error) {
             return res.json(error)
@@ -99,7 +115,7 @@ app.get('/api/forms', async (req, res) => {
     //     params.isLive = false;
     // }
     switch (req.query.status) {
-        case 'on':  params.isLive = true;  break;
+        case 'on': params.isLive = true; break;
         case 'off': params.isLive = false; break;
         default: break;
     }
@@ -117,12 +133,12 @@ app.post('/api/forms', validateForm, async (req, res) => {
 app.patch('/api/forms/:id', async (req, res) => {
     // // TODO access: organizer only // TODO DRY
     const { id } = req.params;
-    if (['on', 'off'].includes(req.body.status)){
+    if (['on', 'off'].includes(req.body.status)) {
         const isLive = req.body.status === 'on' ? true : false;
         const form = await Form.findByIdAndUpdate(id, { isLive }, { runValidators: true, new: true });
         return res.json(form)
     } else {
-        return res.json({ error: 'only "on" or "off"'}) // TODO
+        return res.json({ error: 'only "on" or "off"' }) // TODO
     }
 })
 
@@ -166,7 +182,7 @@ app.get('/api/schedules', async (req, res) => {
     // TODO access: organizer only
     const params = {}
     switch (req.query.onlyOpen) {
-        case 'on':  params.isOpen = true;  break;
+        case 'on': params.isOpen = true; break;
         case 'off': params.isOpen = false; break;
         default: break;
     }
@@ -175,7 +191,7 @@ app.get('/api/schedules', async (req, res) => {
     //     case 'off': params.isPermanent = false; break;
     //     default: break;
     // }
-    if (req.query.weekNum != 'undefined'  && req.query.year != 'undefined') {
+    if (req.query.weekNum != 'undefined' && req.query.year != 'undefined') {
         params.weekNum = req.query.weekNum;
         params.year = req.query.year;
     }
@@ -202,12 +218,12 @@ app.patch('/api/schedules/:id', async (req, res) => {
     // TODO access: organizer only
     // TODO add validation!!
     const { id } = req.params;
-    if (['on', 'off'].includes(req.body.open)){
+    if (['on', 'off'].includes(req.body.open)) {
         const isOpen = req.body.open === 'on' ? true : false;
         const schedule = await Schedule.findByIdAndUpdate(id, { isOpen }, { runValidators: true, new: true });
         return res.json(schedule)
     } else {
-        return res.json({ error: 'only "on" or "off"'}) // TODO
+        return res.json({ error: 'only "on" or "off"' }) // TODO
     }
 })
 
