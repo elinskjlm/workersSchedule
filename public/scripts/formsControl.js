@@ -115,7 +115,6 @@ function createActionButtons(i, formId, isLive) {
 }
 
 async function loadFormsTable() {
-    console.log('ff')
     const forms = await fetchForms();
     tbody.innerHTML = '';
     forms.forEach((form, i) => {
@@ -130,10 +129,16 @@ async function loadFormsTable() {
             <td>${form.dates.startDate}</td>
             <td>${form.dates.endDate}</td>
             <td id="actions[${i}]"></td>
-            <td><a href="#">לינק</a></td>
+            <td><a href="formworker/${form._id}" target="_blank">לינק</a>
+            <a href="#" id="copy[${i}]", data-link="formworker/${form._id}">העתקה</a></td>
         `;
         tbody.appendChild(tr);
         document.getElementById(`actions[${i}]`).append(actions)
+        const copyLink = document.getElementById(`copy[${i}]`);
+        const origin = window.location.origin
+        copyLink.addEventListener('click', () => {
+            navigator.clipboard.writeText(`${origin}/${copyLink.dataset.link}`)
+        })
     });
 }
 
