@@ -1,10 +1,12 @@
-const express = require('express');
-const path = require('path');
-const mongoose = require('mongoose');
-const Schedule = require('./models/schedule');
-const Form = require('./models/form');
+const express =     require('express');
+const path =        require('path');
+const mongoose =    require('mongoose');
+const Schedule =    require('./models/schedule');
+const Form =        require('./models/form');
 const { validateSchema, validateForm } = require('./middleware');
-const { dateToWeeknum } = require('./utils/weekDate')
+const formsView =   require('./controllers/views/forms')
+const schedsView =  require('./controllers/views/schedules')
+const othersView =  require('./controllers/views/others')
 
 const dbUrl = 'mongodb://localhost:27017/sidur';
 const app = express();
@@ -23,87 +25,17 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 /* ##################### / ######################### */
 
+app.get('/',                formsView.renderWorkerForm)
+app.get('/formWorker',      formsView.renderWorkerForm)
+app.get('/formWorker/:id',  formsView.renderWorkerForm)
 
-app.get('/', (req, res) => {
-    res.redirect('/formWorker')
-})
+app.get('/formsControl',    formsView.renderFormsControl)
 
-app.get('/formsControl', (req, res) => {
-    // TODO access: organizer only
-    res.render('formsControl');
-})
+app.get('/schedulesControl', schedsView.renderSchedsControl)
 
-app.get('/schedulesControl', (req, res) => {
-    // TODO access: organizer only
-    res.render('schedulesControl');
-})
+app.get('/readSchedule',    schedsView.renderReadSched)
 
-app.get('/formWorker', (req, res) => {
-    // TODO access: users only?
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentWeek = dateToWeeknum(today);
-    res.render('formWorker', { currentYear, currentWeek });
-})
-
-app.get('/formWorker/:id', async (req, res) => {
-    // TODO access: users only?
-    const id = req.params.id;
-    const form = await Form.findById(id)
-    if (form) {
-        const currentYear = form.year;
-        const currentWeek = form.weekNum - 1; // TODO
-        res.render('formWorker', { currentYear, currentWeek });
-    } else {
-        return res.redirect('/formWorker')
-    }
-    // const today = new Date();
-    // const currentYear = today.getFullYear();
-    // const currentWeek = dateToWeeknum(today);
-    // res.render('formWorker', { currentYear, currentWeek });
-})
-
-app.get('/readSchedule', async (req, res) => {
-    // TODO access: organizer only
-    const formId = req.query.formid || '';
-    const scheduleId = req.query.scheduleid || '';
-    if (formId && scheduleId) { // TODO think about it , DRY
-        return res.render('readSchedule', { weekNum: '', year: '', scheduleId: '' })
-    } else if (formId) {
-        try { // TEMP TODO permanent
-            const form = await Form.findById(formId);
-            const { weekNum = '', year = '' } = form; // TODO pass also the names? ugh
-            return res.render('readSchedule', { weekNum, year, scheduleId })
-
-        } catch (error) {
-            return res.json(error)
-        }
-    } else if (scheduleId) {
-        try {
-            const schedule = await Schedule.findById(scheduleId);
-            const { weekNum = '', year = '' } = schedule;
-            return res.render('readSchedule', { weekNum, year, scheduleId }) // TODO DRY
-        } catch (error) {
-            return res.json(error)
-        }
-
-    } else {
-        return res.render('readSchedule', { weekNum: '', year: '', scheduleId: '' })
-    }
-})
-
-// app.get('/readSchedule/:id', async (req, res) => {
-//     // TODO access: organizer only
-//     const id = req.params.id;
-//     const form = await Form.findById(id);
-//     console.log(form)
-//     const { weekNum, year } = form;
-//     res.render('readSchedule', { weekNum, year })
-// })
-
-app.get('/thankYou', (req, res) => {
-    res.render('thankyou')
-})
+app.get('/thankYou',        othersView.renderThankyou)
 
 /* ################## /api/forms ##################### */
 
