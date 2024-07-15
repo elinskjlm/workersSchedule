@@ -4,7 +4,6 @@ const mongoose =    require('mongoose');
 // const { validateSchedule, validateForm } = require('./middleware');
 // const formsView =   require('./controllers/views/forms')
 // const schedsView =  require('./controllers/views/schedules')
-const othersView =  require('./controllers/views/others')
 // const formsAPI =    require('./controllers/api/v1/forms')
 // const schedsAPI =   require('./controllers/api/v1/schedules')
 const apiRoutes =   require('./routes/api')
@@ -25,13 +24,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
 
-// app.get('/', formsView.renderWorkerForm)
-
 app.use('/', viewsRoutes)
 
-app.get('/thankYou', othersView.renderThankyou)
+app.get('/thankYou', (req, res) => res.render('thankyou'))
 
 app.use('/api/v1', apiRoutes)
+
+app.all('*', (req, res) => res.redirect('/forms/apply'))
 
 app.listen(8080, () => {
     console.log('listeningggg');
