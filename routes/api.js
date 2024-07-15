@@ -24,7 +24,7 @@ router.route('/schedules/:id')
     .delete(catchAsync(schedsAPI.deleteSchedule));
 
 router.route('/schedules')
-    .get(catchAsync(schedsAPI.getAllScheds))
-    .post(catchAsync(validateSchedule, schedsAPI.createSchdule));
+    .get(/*catchAsync(*/schedsAPI.getAllScheds/*)*/)
+    .post(/*catchAsync(*/validateSchedule, schedsAPI.createSchdule/*)*/);
 
 module.exports = router;
