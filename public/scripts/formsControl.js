@@ -131,8 +131,8 @@ async function loadFormsTable() {
             <td>${form.dates.startDate}</td>
             <td>${form.dates.endDate}</td>
             <td id="actions[${i}]"></td>
-            <td><a href="formworker/${form._id}" target="_blank">לינק</a>
-            <a href="#" id="copy[${i}]", data-link="formworker/${form._id}">העתקה</a></td>
+            <td><a href="apply/${form._id}" target="_blank">לינק</a>
+            <a href="#" id="copy[${i}]", data-link="forms/apply/${form._id}">העתקה</a></td>
         `;
         tbody.appendChild(tr);
         document.getElementById(`actions[${i}]`).append(actions)

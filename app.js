@@ -26,14 +26,14 @@ app.use(express.static(path.join(__dirname, '/public')));
 /* ##################### / ######################### */
 
 app.get('/',                    formsView.renderWorkerForm)
-app.get('/formWorker',          formsView.renderWorkerForm)
-app.get('/formWorker/:id',      formsView.renderWorkerForm)
+app.get('/forms/apply',          formsView.renderWorkerForm)
+app.get('/forms/apply/:id',      formsView.renderWorkerForm)
 
-app.get('/formsControl',        formsView.renderFormsControl)
+app.get('/forms/control',        formsView.renderFormsControl)
 
-app.get('/schedulesControl',    schedsView.renderSchedsControl)
+app.get('/schedules/control',    schedsView.renderSchedsControl)
 
-app.get('/readSchedule',        schedsView.renderReadSched)
+app.get('/schedules/read',        schedsView.renderReadSched)
 
 app.get('/thankYou',            othersView.renderThankyou)
 
