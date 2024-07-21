@@ -11,7 +11,7 @@ router.route('/forms/:id')
 
 router.route('/forms')
     .get(catchAsync(formsAPI.getAllForms))
-    .post(catchAsync(validateForm, formsAPI.createForm));
+    .post(validateForm, formsAPI.createForm);
 
 
 router.get('/schedules/getNames', catchAsync(schedsAPI.getNames));
