@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <%- include('./partials/navbar') %>
+    <%- include('../partials/navbar') %>
     <main class="container-lg my-3">
         <div class="container-lg my-3">
             <h1 class="text-center">ניהול טפסים</h1>
@@ -48,7 +48,7 @@
                     <p class="m-0">עבור שבוע:</p>
                 </div>
                 <div class="col-2 p-2 d-flex justify-content-center">
-                    <%- include('partials/weekPicker') %>
+                    <%- include('../partials/weekPicker') %>
                 </div>
                 <div class="col-2 p-2 d-flex justify-content-center">
                     <div id="newBtn" class="btn btn-primary btn-sm">יצירה</div>
@@ -73,7 +73,6 @@
                         <label class="btn btn-outline-primary" for="radio-inactive">רק לא פעילים</label>
                     </div>
                 </div>
-
             </div>
             <div class="row d-flex align-items-center border border-primary rounded">
                 <div class="table-responsive">
