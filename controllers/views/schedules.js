@@ -2,7 +2,7 @@ const Form =        require('../../models/form');
 const Schedule =    require('../../models/schedule');
 
 module.exports.renderSchedsControl = (req, res) => {
-    res.render('schedules/schedulesControl')
+    res.render('schedules/schedulesControl', { pageTitle: 'ניהול סידורים' })
 }
 
 module.exports.renderReadSched = async (req, res) => {
@@ -24,12 +24,12 @@ module.exports.renderReadSched = async (req, res) => {
         try {
             const schedule = await Schedule.findById(scheduleId);
             const { weekNum = '', year = '' } = schedule;
-            return res.render('schedules/readSchedule', { weekNum, year, scheduleId }) // TODO DRY
+            return res.render('schedules/readSchedule', { weekNum, year, scheduleId, pageTitle: 'עיון בסידור' }) // TODO DRY
         } catch (error) {
             return res.json(error)
         }
 
     } else {
-        return res.render('schedules/readSchedule', { weekNum: '', year: '', scheduleId: '' })
+        return res.render('schedules/readSchedule', { weekNum: '', year: '', scheduleId: '', pageTitle: 'עיון בסידור' })
     }
 }

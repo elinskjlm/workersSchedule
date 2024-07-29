@@ -2,6 +2,7 @@ const express =     require('express');
 const path =        require('path');
 const mongoose =    require('mongoose');
 const session =     require('express-session');
+const ejsMate =     require('ejs-mate');
 // const { validateSchedule, validateForm } = require('./middleware');
 // const formsView =   require('./controllers/views/forms')
 // const schedsView =  require('./controllers/views/schedules')
@@ -18,6 +19,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection Error: '));
 db.once('open', () => console.log('DB connected 🔛'));
 
+app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 

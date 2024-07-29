@@ -17,5 +17,5 @@ module.exports.renderWorkerForm = async (req, res) => {
 }
 
 module.exports.renderFormsControl = (req, res) => {
-    res.render('forms/formsControl')
+    res.render('forms/formsControl', { pageTitle: 'ניהול טפסים' })
 }

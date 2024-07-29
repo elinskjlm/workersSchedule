@@ -6,9 +6,9 @@
     padding: 0;
 }
 
-.hidden {
+/* .hidden {
     display: none;
-}
+} */
 
 .autocomplete {
     /*the container must be positioned relative:*/
