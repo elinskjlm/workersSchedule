@@ -20,3 +20,14 @@ module.exports.validateForm = (req, res, next) => {
         next();
     }
 }
+
+module.exports.isLoggedIn = (req, res, next) => {
+    if (req.session.userId) {
+        console.log(req.session)
+        console.log('👍🏻👍🏻👍🏻👍🏻')
+        next()
+    } else {
+        console.log('👎🏻👎🏻👎🏻👎🏻👎🏻')
+        res.send('Uh-uh')
+    }
+}

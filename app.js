@@ -1,13 +1,14 @@
 const express =     require('express');
 const path =        require('path');
 const mongoose =    require('mongoose');
+const session =     require('express-session');
 // const { validateSchedule, validateForm } = require('./middleware');
 // const formsView =   require('./controllers/views/forms')
 // const schedsView =  require('./controllers/views/schedules')
 // const formsAPI =    require('./controllers/api/v1/forms')
 // const schedsAPI =   require('./controllers/api/v1/schedules')
-const apiRoutes =   require('./routes/api')
-const viewsRoutes = require('./routes/views')
+const apiRoutes =   require('./routes/api');
+const viewsRoutes = require('./routes/views');
 
 const dbUrl = 'mongodb://localhost:27017/sidur';
 const app = express();
@@ -20,9 +21,24 @@ db.once('open', () => console.log('DB connected 🔛'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
+
+const sessionConfig = {
+    name: 'session',
+    secret: 'TEMPTEMPtemporarySecret',
+    // store,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        // secure: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // miliseconds
+        maxAge: 1000 * 60 * 60 * 24 * 7 // miliseconds
+    }
+}
+app.use(session(sessionConfig))
 
 app.use('/', viewsRoutes)
 
