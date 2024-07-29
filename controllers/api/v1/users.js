@@ -96,3 +96,31 @@ module.exports.deleteUser = async (req, res) => {
         data: user,
     });
 }
+
+module.exports.loginUser = async (req, res) => {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    const hashedPw = user?.hashedPassword || '';
+    const isCorrect = await bcrypt.compare(password, hashedPw);
+    if (isCorrect) {
+        req.session.userId = user._id;
+        console.log(req.session)
+        return res.send({
+            success: true,
+            msgHeb: `המשתמש "${user.username}" זוהה בהצלחה.`, //TODO
+            data: {
+                userId: user._id,
+                name: user.name,
+                username: user.username,
+            },
+        })
+    } else {
+        delete req.session.userId;
+        console.log(req.session);
+        return res.send({
+            success: false,
+            msgHeb: `פרטי משתמש לא נכונים.`, //TODO
+            data: '',
+        })
+    }
+}

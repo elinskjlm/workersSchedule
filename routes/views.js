@@ -18,8 +18,8 @@ router.get('/users/login', usersView.renderLogin);
 router.get('/users/register', usersView.renderRegister);
 router.get('/users/control', usersView.renderUsersControl);
 
-router.post('/users/login', catchAsync(usersView.loginUser));
-router.post('/users/register', catchAsync(usersView.registerUser));
+// router.post('/users/login', catchAsync(usersView.loginUser));
+// router.post('/users/register', catchAsync(usersView.registerUser));
 
 
 module.exports = router;

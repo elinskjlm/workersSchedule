@@ -5,7 +5,11 @@ module.exports.renderLogin = (req, res) => res.render('users/login')
 
 module.exports.renderRegister = (req, res) => res.render('users/register')
 
-module.exports.renderUsersControl = (req, res) => res.render('users/usersControl')
+module.exports.renderUsersControl = (req, res) => {
+    const userSessionData = req.session || 'no session'
+    console.log(req.session)
+    res.render('users/usersControl', { userSessionData, pageTitle: 'ניהול משתמשים' })
+}
 
 // module.exports.registerUser = async (req, res) => {
 //     async function passwordHasher(pw) {
@@ -30,18 +34,18 @@ module.exports.renderUsersControl = (req, res) => res.render('users/usersControl
 //     }
 // }
 
-module.exports.loginUser = async (req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    const hashedPw = user?.hashedPassword || '';
-    const isCorrect = await bcrypt.compare(password, hashedPw);
-    if (isCorrect) {
-        req.session.userId = user._id;
-        console.log(req.session)
-        res.send(user)
-    } else {
-        delete req.session.userId;
-        console.log(req.session);
-        res.send('incorrect username / password (try admin 1234)')
-    }
-}
+// module.exports.loginUser = async (req, res) => {
+//     const { username, password } = req.body;
+//     const user = await User.findOne({ username });
+//     const hashedPw = user?.hashedPassword || '';
+//     const isCorrect = await bcrypt.compare(password, hashedPw);
+//     if (isCorrect) {
+//         req.session.userId = user._id;
+//         console.log(req.session)
+//         res.send(user)
+//     } else {
+//         delete req.session.userId;
+//         console.log(req.session);
+//         res.send('incorrect username / password (try admin 1234)')
+//     }
+// }

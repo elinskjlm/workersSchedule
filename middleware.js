@@ -28,6 +28,7 @@ module.exports.isLoggedIn = (req, res, next) => {
         next()
     } else {
         console.log('👎🏻👎🏻👎🏻👎🏻👎🏻')
-        res.send('Uh-uh')
+        next() // TEMP TODO TEMPPPPPPPPPPPPP
+        // res.send('Uh-uh')
     }
 }

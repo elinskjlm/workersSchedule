@@ -143,3 +143,33 @@
         </div>
     </div>
 </div>
+
+<!-- Login user -->
+<div class="modal fade" id="loginUserModal" tabindex="-1" aria-labelledby="loginUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="loginUserModalLabel">כניסת משתמש</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">שם משתמש</span>
+                    <input type="text" id="loginUsername" name="loginUsername" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">סיסמה</span>
+                    <input type="password" id="loginUserPassword" name="loginUserPassword" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary ms-3"
+                    data-bs-dismiss="modal">ביטול</button>
+                <button type="button" id="btnModalLogin" class="btn btn-sm btn-outline-primary ms-3"
+                    data-bs-dismiss="modal">כניסה</button>
+            </div>
+        </div>
+    </div>
+</div>
