@@ -124,3 +124,11 @@ module.exports.loginUser = async (req, res) => {
         })
     }
 }
+
+module.exports.logoutUser = async (req, res) => {
+    req.session.userId = null;
+    return res.send({
+        success: req.session.userId === null,
+        redirect: '/users/login',
+    });
+}

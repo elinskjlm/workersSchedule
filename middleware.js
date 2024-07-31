@@ -22,13 +22,18 @@ module.exports.validateForm = (req, res, next) => {
 }
 
 module.exports.isLoggedIn = (req, res, next) => {
+    // console.log('🦖🦖🦖🦖🦖🦖🦖🦖', req.baseUrl)
     if (req.session.userId) {
-        console.log(req.session)
-        console.log('👍🏻👍🏻👍🏻👍🏻')
+        // console.log(req.session)
+        console.log('👍👍👍👍👍')
+        // res.locals.currentUser = 'herro 😑'
         next()
     } else {
-        console.log('👎🏻👎🏻👎🏻👎🏻👎🏻')
-        next() // TEMP TODO TEMPPPPPPPPPPPPP
-        // res.send('Uh-uh')
+        console.log('👎👎👎👎👎')
+        if (req.baseUrl.startsWith('/api')) {
+            return res.send({ success: false, reason: 'Not allowed or not logged in.' })
+        } else {
+            return res.redirect('/users/login')
+        }
     }
 }
