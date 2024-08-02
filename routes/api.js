@@ -33,7 +33,7 @@ router.route('/users')
 
 router.post('/users/login',     catchAsync(usersAPI.loginUser));
 router.get('/users/logout',     catchAsync(usersAPI.logoutUser));
-router.post('/users/register',  catchAsync(usersAPI.createUser));
+router.post('/users/register', isLoggedIn,  catchAsync(usersAPI.createUser));
 
 router.route('/users/:id')
     .get(isLoggedIn,    catchAsync(usersAPI.readUser))
