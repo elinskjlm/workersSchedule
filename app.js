@@ -42,13 +42,21 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 
+app.use((req, res, next) => { // TEMP
+    console.log('┌───────────────────────────');
+    console.log('│', req.session.userId);
+    console.log('│', req.method, req.originalUrl);
+    console.log('└───────────────────────────');
+    next();
+})
+
 app.use('/', viewsRoutes)
 
 app.get('/thankYou', (req, res) => res.render('thankyou'))
 
 app.use('/api/v1', apiRoutes)
 
-app.all('*', (req, res) => res.redirect('/forms/apply'))
+// app.all('*', (req, res) => res.redirect('/forms/apply'))
 
 app.listen(8080, () => {
     console.log('listeningggg');
