@@ -12,11 +12,9 @@
 </head>
 
 <body class="mb-5 d-flex flex-column">
-    <main class="container col-lg-6 col-md-8 mt-5">
-        <div class="container mb-5">
-            <h1 class="text-center">כניסת משתמש</h1>
-        </div>
-        <form class="container">
+    <main class="TEMP-container TEMP-col-lg-10 TEMP-col-md-12 TEMP-mt-5">
+
+        <!-- <form class="container">
             <div>
                 <div class="input-group input-group-sm my-2">
                     <span class="input-group-text">שם משתמש</span>
@@ -31,6 +29,48 @@
                 <button type="button" id="btnLogin" class="btn btn-sm btn-outline-primary me-3">כניסה</button>
             </div>
         </form>
+        <div>
+            <div class="d-flex justify-content-center">
+                <a class="btn btn-sm btn-outline-primary" href="/forms/apply" role="button">להגשת סידור</a>
+            </div>
+        </div> -->
+
+
+        <div class="row m-3 p-3">
+            <div class="col-sm-5 mx-auto p-2 border border-primary rounded m-3">
+                <div class="mt-3 mb-5">
+                    <h4 class="text-center">כניסת מנהל</h4>
+                </div>
+                <form class="container">
+                    <div>
+                        <div class="input-group input-group-sm my-2">
+                            <span class="input-group-text">שם משתמש</span>
+                            <input type="text" id="loginUsername" name="loginUsername" class="form-control" autocomplete="" required/>
+                        </div>
+                        <div class="input-group input-group-sm my-2">
+                            <span class="input-group-text">סיסמה</span>
+                            <input type="password" id="loginPassword" name="loginPassword" class="form-control" autocomplete="" required/>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" id="btnLogin" class="btn btn-sm btn-outline-primary me-3">כניסה</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-5 mx-auto p-2 border border-primary rounded m-3">
+                <!-- <div class="d-flex justify-content-center">
+                    <img src="/assets/images/emptySched01.png" class="img-fluid" alt="...">
+                    <a class="btn btn-sm btn-outline-primary" href="/forms/apply" role="button">להגשת סידור</a>
+                </div> -->
+                <div class="mt-3 mb-5">
+                    <h4 class="text-center">הגשת סידור</h4>
+                </div>
+                <a class="d-flex justify-content-center" href="/forms/apply">
+                    <img src="/assets/images/emptySched01.png" class="img-fluid rounded" alt="...">
+                </a>
+            </div>
+        </div>
     </main>
 
 
