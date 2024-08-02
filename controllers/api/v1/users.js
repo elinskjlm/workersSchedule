@@ -2,7 +2,7 @@ const User =    require('../../../models/user');
 const bcrypt =  require('bcryptjs');
 
 module.exports.getAllUsers = async (req, res) => {
-    const users = await User.find({}, { hashedPassword: 0, __v: 0 });
+    const users = await User.find({}, { password: 0, __v: 0 });
     res.send(users);
 }
 
@@ -13,7 +13,7 @@ module.exports.createUser = async (req, res) => {
     //     return hashed;
     // }
     const { name, username, password, roll } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // const hashedPassword = await bcrypt.hash(password, 12);
     const userExists = (await User.find({ username })).length;
     if (userExists) {
         res.send({
@@ -24,7 +24,8 @@ module.exports.createUser = async (req, res) => {
         const newUser = new User({
             name,
             username,
-            hashedPassword,
+            // hashedPassword: password,
+            password,
             roll: roll || 'inspector',
             created: new Date(),
             lastSeen: null,
@@ -43,7 +44,7 @@ module.exports.createUser = async (req, res) => {
 
 module.exports.readUser = async (req, res) => {
     const { id } = req.params;
-    const user = await User.findById(id, { hashedPassword: 0 });
+    const user = await User.findById(id, { password: 0 });
     res.send(user);
 }
 
@@ -65,10 +66,10 @@ module.exports.updateUser = async (req, res) => {
     // newName ? user.name = newName : '';
     // newRoll ? user.roll = newRoll : '';
     if (oldPassword && newPassword) {
-        const hashedPasswordUser = user.hashedPassword;
-        const allowed = await bcrypt.compare(oldPassword, hashedPasswordUser);
+        const hashedOldPw = user.password;
+        const allowed = await bcrypt.compare(oldPassword, hashedOldPw);
         if (allowed) {
-            user.hashedPassword = await bcrypt.hash(newPassword, 12);
+            user.password = await bcrypt.hash(newPassword, 12);
             changes.push('סיסמה')
         } else {
             console.log('nono')
