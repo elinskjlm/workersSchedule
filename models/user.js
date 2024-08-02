@@ -1,4 +1,5 @@
 const mongoose =    require('mongoose');
+const bcrypt =      require('bcryptjs');
 const Schema =      mongoose.Schema;
 
 const opts = { toJSON: { virtuals: true } }
@@ -32,5 +33,11 @@ UserSchema.virtual('shortId').get(function() {
 UserSchema.virtual('createdDate').get(function() {
     return `${this.created?.getDate().toString().padStart(2, '0')}/${(this.created?.getMonth()+1).toString().padStart(2, '0')}/${this.created?.getFullYear().toString().slice(-2)}`
 })
+
+UserSchema.statics.findAndValidate = async function (username, password) {
+    const foundUser = await this.findOne({ username });
+    const isValid = await bcrypt.compare(password, foundUser.hashedPassword);
+    return isValid ? foundUser : false;
+}
 
 module.exports = mongoose.model('User', UserSchema)

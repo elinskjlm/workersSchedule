@@ -99,10 +99,11 @@ module.exports.deleteUser = async (req, res) => {
 
 module.exports.loginUser = async (req, res) => {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    const hashedPw = user?.hashedPassword || '';
-    const isCorrect = await bcrypt.compare(password, hashedPw);
-    if (isCorrect) {
+    // const user = await User.findOne({ username });
+    // const hashedPw = user?.hashedPassword || '';
+    // const isCorrect = await bcrypt.compare(password, hashedPw);
+    const user = await User.findAndValidate(username, password)
+    if (user) {
         req.session.userId = user._id;
         console.log(req.session)
         return res.send({
