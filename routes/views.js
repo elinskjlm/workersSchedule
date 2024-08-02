@@ -16,7 +16,6 @@ router.get('/schedules/control', isLoggedIn, schedsView.renderSchedsControl);
 router.get('/schedules/read',    isLoggedIn, schedsView.renderReadSched);
 
 router.get('/users/login',                   usersView.renderLogin);
-router.get('/users/register',    isLoggedIn, usersView.renderRegister);
 router.get('/users/control',     isLoggedIn, usersView.renderUsersControl);
 
 // router.post('/users/login', catchAsync(usersView.loginUser));
