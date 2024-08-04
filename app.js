@@ -1,15 +1,18 @@
-const express =     require('express');
-const path =        require('path');
-const mongoose =    require('mongoose');
-const session =     require('express-session');
-const ejsMate =     require('ejs-mate');
+const express =         require('express');
+const path =            require('path');
+const mongoose =        require('mongoose');
+const session =         require('express-session');
+const ejsMate =         require('ejs-mate');
+const passport =        require('passport');
+const LocalStrategy =   require('passport-local');
 // const { validateSchedule, validateForm } = require('./middleware');
 // const formsView =   require('./controllers/views/forms')
 // const schedsView =  require('./controllers/views/schedules')
 // const formsAPI =    require('./controllers/api/v1/forms')
 // const schedsAPI =   require('./controllers/api/v1/schedules')
-const apiRoutes =   require('./routes/api');
-const viewsRoutes = require('./routes/views');
+const apiRoutes =       require('./routes/api');
+const viewsRoutes =     require('./routes/views');
+const User =            require('./models/user')
 
 const dbUrl = 'mongodb://localhost:27017/sidur';
 const app = express();
@@ -42,9 +45,15 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 
+app.use(passport.initialize());
+app.use(passport.session()); // Must be after `app.use(session(sessionConfig))`
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => { // TEMP
     console.log('┌───────────────────────────');
-    console.log('│', req.session.userId);
+    console.log('│', req.user?.id);
     console.log('│', req.method, req.originalUrl);
     console.log('└───────────────────────────');
     next();

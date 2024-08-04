@@ -22,18 +22,23 @@ module.exports.validateForm = (req, res, next) => {
 }
 
 module.exports.isLoggedIn = (req, res, next) => {
-    // console.log('🦖🦖🦖🦖🦖🦖🦖🦖', req.baseUrl)
-    if (req.session.userId) {
-        // console.log(req.session)
-        console.log('👍👍👍👍👍')
-        // res.locals.currentUser = 'herro 😑'
-        next()
-    } else {
-        console.log('👎👎👎👎👎')
+    if (!req.isAuthenticated()) {
+        console.log('👎👎👎👎👎') 
         if (req.baseUrl.startsWith('/api')) {
             return res.send({ success: false, reason: 'Not allowed or not logged in.' })
         } else {
             return res.redirect('/users/login')
         }
+    } else {
+        console.log('👍👍👍👍👍')
+        next();
     }
+}
+
+// middleware to be used if a logged-in user is trying and failing to log-in again
+module.exports.logout = (req, res, next) => {
+    req.logOut(function (err) {
+        if (err) return next(err); // TODO ???
+    });
+    next();
 }

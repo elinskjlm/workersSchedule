@@ -1,5 +1,6 @@
 const express =     require('express');
-const { validateSchedule, validateForm, isLoggedIn } = require('../middleware');
+const passport =    require('passport');
+const { validateSchedule, validateForm, isLoggedIn, logout } = require('../middleware');
 const catchAsync =  require('../utils/catchAsync')
 const formsAPI =    require('../controllers/api/v1/forms')
 const schedsAPI =   require('../controllers/api/v1/schedules')
@@ -31,9 +32,8 @@ router.route('/users')
     .get(isLoggedIn,    catchAsync(usersAPI.getAllUsers))
     .post(isLoggedIn,   catchAsync(usersAPI.createUser));
 
-router.post('/users/login',     catchAsync(usersAPI.loginUser));
+router.post('/users/login', logout, passport.authenticate('local'), usersAPI.loginUser);
 router.get('/users/logout',     catchAsync(usersAPI.logoutUser));
-router.post('/users/register', isLoggedIn,  catchAsync(usersAPI.createUser));
 
 router.route('/users/:id')
     .get(isLoggedIn,    catchAsync(usersAPI.readUser))
