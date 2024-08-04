@@ -25,7 +25,7 @@ module.exports.createUser = async (req, res) => {
             name,
             username,
             // hashedPassword: password,
-            password,
+            password, // Hashing using bcrypt will be done on the model's middleware
             roll: roll || 'inspector',
             created: new Date(),
             lastSeen: null,
