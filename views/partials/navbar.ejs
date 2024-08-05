@@ -21,14 +21,13 @@
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto">
+                <% if (currentUser) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-username"><%= currentUser.username %></a>
+                    </li>
+                <% } %>
                 <li class="nav-item">
-                    <a class="nav-link" id="nav-username">nameeeeee</a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" id="nav-login" data-bs-toggle="modal" data-bs-target="#loginUserModal">כניסה</a>
-                </li> -->
-                <li class="nav-item">
-                    <a class="nav-link" id="nav-logout">יציאה</a>
+                    <a class="nav-link" id="nav-logout" href="#">יציאה</a>
                 </li>
             </ul>
         </div>

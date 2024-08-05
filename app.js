@@ -51,7 +51,9 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next) => { // TEMP
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    // TEMP
     console.log('┌───────────────────────────');
     console.log('│', req.user?.id);
     console.log('│', req.method, req.originalUrl);
