@@ -63,6 +63,7 @@ app.use((req, res, next) => {
 
 app.use('/', viewsRoutes)
 
+app.get('/', (req, res) => res.redirect('/users/login'))
 app.get('/thankYou', (req, res) => res.render('thankyou'))
 
 app.use('/api/v1', apiRoutes)
