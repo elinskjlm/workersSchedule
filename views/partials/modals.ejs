@@ -1,0 +1,175 @@
+<!-- Users -->
+
+<!-- Delete User -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteUserModalLabel">מחיקת משתמש</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>האם למחוק את המשתמש?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary ms-3"
+                    data-bs-dismiss="modal">להשאיר</button>
+                <button type="button" id="btnModalDelUser" class="btn btn-sm btn-outline-danger ms-3"
+                    data-bs-dismiss="modal">למחוק</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create user -->
+<div class="modal fade" id="newUserModal" tabindex="-1" aria-labelledby="newUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="newUserModalLabel">יצירת משתמש</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">שם</span>
+                    <input type="text" id="newName" name="newName" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">שם משתמש</span>
+                    <input type="text" id="newUsername" name="newUsername" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">סיסמה</span>
+                    <input type="password" id="newUserPassword" name="newUserPassword" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">תפקיד</span>
+                    <!-- <datalist id="rolls-list">
+                        <option value="dev"></option>
+                        <option value="admin"></option>
+                        <option value="inspector"></option>
+                    </datalist>
+                    <input type="text" id="newRoll" name="newRoll" list="rolls-list" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" /> -->
+                    <select class="form-select" id="newUserRoll" name="newUserRoll">
+                        <option value="inspector" selected>מפקח</option>
+                        <option value="admin">סדרן</option>
+                        <option value="dev" disabled>מפתח</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-danger ms-3" data-bs-dismiss="modal">לבטל</button>
+                <button type="button" id="btnModalCreate" class="btn btn-sm btn-outline-success ms-3"
+                    data-bs-dismiss="modal">ליצור</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success (creating a new user) -->
+<div class="modal fade" id="successUserModal" tabindex="-1" aria-labelledby="successUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="successUserModalH1">הצלחה</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="successUserModalMessege">הפעולה הצליחה</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary ms-3"
+                    data-bs-dismiss="modal">סגור</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit user -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editUserModalLabel">עריכת פרטי משתמש</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#">
+                    <!-- If himself -->
+                    <div class="input-group input-group-sm my-2">
+                        <span class="input-group-text">שם</span>
+                        <input type="text" id="toEditName" name="toEditName" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                    </div>
+                    <!-- If himself -->
+                    <div class="input-group input-group-sm my-2">
+                        <span class="input-group-text">סיסמה נוכחית</span>
+                        <input type="password" id="oldPassword" name="oldPassword" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                    </div>
+                    <div class="input-group input-group-sm my-2">
+                        <span class="input-group-text">סיסמה חדשה</span>
+                        <input type="password" id="toEditPassword" name="toEditPassword" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                    </div>
+                    <!-- If admin -->
+                    <div class="input-group input-group-sm my-2">
+                        <span class="input-group-text">תפקיד</span>
+                        <!-- <datalist id="rolls-list">
+                        <option value="dev"></option>
+                        <option value="admin"></option>
+                        <option value="inspector"></option>
+                    </datalist>
+                    <input type="text" id="toEditRoll" name="toEditRoll" list="rolls-list" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" /> -->
+                        <select class="form-select" id="toEditUserRoll" name="toEditUserRoll">
+                            <option value="inspector" selected>מפקח</option>
+                            <option value="admin">סדרן</option>
+                            <option value="dev" disabled>מפתח</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary ms-3"
+                    data-bs-dismiss="modal">ביטול</button>
+                <button type="button" id="btnModalEdit" class="btn btn-sm btn-outline-warning ms-3"
+                    data-bs-dismiss="modal">שינוי</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login user -->
+<div class="modal fade" id="loginUserModal" tabindex="-1" aria-labelledby="loginUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="loginUserModalLabel">כניסת משתמש</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">שם משתמש</span>
+                    <input type="text" id="loginUsername" name="loginUsername" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
+                <div class="input-group input-group-sm my-2">
+                    <span class="input-group-text">סיסמה</span>
+                    <input type="password" id="loginUserPassword" name="loginUserPassword" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary ms-3"
+                    data-bs-dismiss="modal">ביטול</button>
+                <button type="button" id="btnModalLogin" class="btn btn-sm btn-outline-primary ms-3"
+                    data-bs-dismiss="modal">כניסה</button>
+            </div>
+        </div>
+    </div>
+</div>

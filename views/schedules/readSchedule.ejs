@@ -1,0 +1,166 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container my-3">
+    <h1 class="text-center">עיון בבקשה לסידור</h1>
+</div>
+
+<div class="container my-3 border border-info rounded">
+    <div class="row d-flex align-items-center">
+        <div class="col-5 p-2 d-flex justify-content-center">
+            <%- include('../partials/weekPicker') %>
+        </div>
+        <div class="col-7 p-2 d-flex justify-content-center">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text">שם</span>
+                <datalist id="names-list"></datalist>
+                <input type="text" id="names-field" name="names-field" list="names-list" class="form-control"
+                    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container my-3 border border-info rounded">
+    <div class="row d-flex align-items-center">
+        <div class="col p-2 d-flex justify-content-center text-center text-justify">
+            <span class="text-muted">הוגש ב:&MediumSpace;</span>
+            <span id="dateSubmitted"></span>
+            <span>&MediumSpace;&MediumSpace;</span>
+            <span class="text-muted">&MediumSpace;בשעה:&MediumSpace;</span>
+            <span id="timeSubmitted"></span>
+        </div>
+    </div>
+</div>
+<div class="container my-3 border border-info rounded">
+    <div class="row d-flex align-items-center">
+        <div class="col-3 p-2 d-flex justify-content-center">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="toggleOne">
+                <label class="form-check-label" for="toggleOne">נפתח</label>
+            </div>
+        </div>
+        <div class="col-3 p-2 d-flex justify-content-center">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="toggleTwo">
+                <label class="form-check-label" for="toggleTwo">נבדק</label>
+            </div>
+        </div>
+        <div class="col-3 p-2 d-flex justify-content-center">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="toggleThree">
+                <label class="form-check-label" for="toggleThree">בלהבלה</label>
+            </div>
+        </div>
+        <div class="col-3 p-2 d-flex justify-content-center">
+            <div id="update-form-button" class="btn btn-primary btn-sm">שמירת שינויים</div>
+        </div>
+    </div>
+</div>
+<div class="container my-3 border border-info rounded">
+    <div class="row border-bottom">
+        <div class="col p-0 d-flex justify-content-center">
+            יום בשבוע
+        </div>
+        <div class="col p-0 d-flex justify-content-center">
+            משמרת בוקר
+        </div>
+        <div class="col p-0 d-flex justify-content-center">
+            משמרת צהרים
+        </div>
+        <div class="col p-0 d-flex justify-content-center">
+            משמרת לילה
+        </div>
+    </div>
+    <% const days=["ראשון", "שני" , "שלישי" , "רביעי" , "חמישי" , "שישי" , "שבת" ]; %>
+        <% for (let i=0; i < 7; i++) { %>
+
+            <!-- 1st ROW (shifts) -->
+            <div class="row row-shifts day-<%= i+1 %>">
+
+                <div class="col p-2 d-flex justify-content-center">
+                    <%= days[i] %>
+                </div>
+
+                <div class="col p-2 d-flex justify-content-center">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input shift-toggle has-ot"
+                            id="shifts[<%= i + 1 %>][morning][reg]" name="shifts[<%= i + 1 %>][morning][reg]"
+                            disabled data-day="<%= i + 1 %>" data-shift="morning" data-category="reg">
+                    </div>
+                </div>
+
+                <div class="col p-2 d-flex justify-content-center">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input shift-toggle"
+                            id="shifts[<%= i + 1 %>][noon][reg]" name="shifts[<%= i + 1 %>][noon][reg]" disabled
+                            data-day="<%= i + 1 %>" data-shift="noon" data-category="reg">
+                    </div>
+                </div>
+
+                <div class="col p-2 d-flex justify-content-center">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input shift-toggle has-ot"
+                            id="shifts[<%= i + 1 %>][night][reg]" name="shifts[<%= i + 1 %>][night][reg]"
+                            disabled data-day="<%= i + 1 %>" data-shift="night" data-category="reg">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 2cd ROW (OTs) -->
+            <div class="row row-ot day-<%= i+1 %> border-bottom">
+
+                <div class="col p-2 d-flex justify-content-center">
+                    <!-- for maintaining structure  -->
+                </div>
+
+                <div class="col d-flex  justify-content-around align-items-start">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input ot-toggle" disabled
+                            id="ots[<%= i + 1 %>][morning][ot1]" name="ots[<%= i + 1 %>][morning][ot]"
+                            data-day="<%= i + 1 %>" data-shift="morning" data-category="ot1">
+                        <label class="form-check-label small" for="ots[<%= i + 1 %>][morning][ot]">עד 19</label>
+                    </div>
+                </div>
+
+                <div class="col p-2 d-flex justify-content-center align-items-center">
+                    <!-- for maintaining structure  -->
+                </div>
+
+                <div class="col d-flex flex-wrap  justify-content-around align-items-start">
+
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input ot-toggle" disabled
+                            id="ots[<%= i + 1 %>][night][ot1]" name="ots[<%= i + 1 %>][night][ot][1]"
+                            data-day="<%= i + 1 %>" data-shift="night" data-category="ot1">
+                        <label class="form-check-label small" for="ots[<%= i + 1 %>][night][ot][1]">מ-19</label>
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input ot-toggle" disabled
+                            id="ots[<%= i + 1 %>][night][ot2]" name="ots[<%= i + 1 %>][night][ot][2]"
+                            data-day="<%= i + 1 %>" data-shift="night" data-category="ot2">
+                        <label class="form-check-label small" for="ots[<%= i + 1 %>][night][ot][2]">עד
+                            11</label>
+                    </div>
+
+                </div>
+
+            </div>
+            <% } %>
+</div>
+<div class="container my-3 border border-info rounded">
+    <label class="form-label" for="comment">
+        <h5>הערות מיוחדות</h5>
+    </label>
+    <p id="comment" class="text-justify text-break-rtl"></p>
+</div>
+<!-- <div class="container my-3 border border-info rounded">
+    <div id="resetButton" class="btn btn-primary btn-sm">איפוס</div>
+</div> -->
+
+<script>
+    const weekNumData = '<%- weekNum %>';
+    const yearData = '<%- year %>';
+    const scheduleIdData = '<%- scheduleId %>';
+</script>
+<script src="/scripts/readSchedule.js"></script>

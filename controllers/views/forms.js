@@ -13,13 +13,9 @@ module.exports.renderWorkerForm = async (req, res) => {
         currentYear = today.getFullYear();
         currentWeek = dateToWeeknum(today);
     }
-    res.render('formWorker', { currentYear, currentWeek })
+    res.render('forms/formWorker', { currentYear, currentWeek })
 }
 
 module.exports.renderFormsControl = (req, res) => {
-    res.render('formsControl')
-}
-
-module.exports.renderSchedsControl = (req, res) => {
-    res.render('schedulesControl')
+    res.render('forms/formsControl', { pageTitle: 'ניהול טפסים' })
 }
