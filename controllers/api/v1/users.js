@@ -98,10 +98,10 @@ module.exports.loginUser = (req, res) => {
 module.exports.logoutUser = (req, res) => {
     req.logOut(function (err) {
         if (err) return next(err); // TODO ???
-        return res.send({
-            success: true,
-            msg: req.session,
-            data: req.user,
-        })
     });
+    return res.send({
+        success: true,
+        msg: req.session,
+        data: req.user,
+    })
 }
