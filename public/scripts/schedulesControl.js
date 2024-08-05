@@ -135,7 +135,6 @@ async function loadSchedulesTable() {
         `;
         tbody.appendChild(tr);
         document.getElementById(`actions[${i}]`).append(actions)
-        console.dir(schedule)
     });
 }
 

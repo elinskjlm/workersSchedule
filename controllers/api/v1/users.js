@@ -1,45 +1,36 @@
-const User =    require('../../../models/user');
-const bcrypt =  require('bcryptjs');
+const User = require('../../../models/user');
 
 module.exports.getAllUsers = async (req, res) => {
-    const users = await User.find({}, { password: 0, __v: 0 });
+    const users = await User.find({}/*, { password: 0, __v: 0 }*/);
     res.send(users);
 }
 
 module.exports.createUser = async (req, res) => {
-    // async function passwordHasher(pw) {
-    //     const salt = await bcrypt.genSalt(12);
-    //     const hashed = await bcrypt.hash(pw, salt) // TEMP can be just `.hash(pw, 12)`
-    //     return hashed;
-    // }
-    const { name, username, password, roll } = req.body;
-    // const hashedPassword = await bcrypt.hash(password, 12);
-    const userExists = (await User.find({ username })).length;
-    if (userExists) {
-        res.send({
-            success: false,
-            msgHeb: `שם המשתמש "${username}" כבר תפוס.`,
-        }) // TODO correct
-    } else {
-        const newUser = new User({
+    // try { // TODO
+        const { name, username, password, roll } = req.body;
+        const user = new User({
             name,
             username,
-            // hashedPassword: password,
-            password, // Hashing using bcrypt will be done on the model's middleware
             roll: roll || 'inspector',
             created: new Date(),
             lastSeen: null,
             lastModified: null,
-        })
-        newUser.save();
-        console.log(newUser);
-        // TODO do not include hashedPassword in the returned object
-        // res.send(newUser._id);
-        res.send({
-            success: true,
-            msgHeb: `המשתמש "${newUser.username}" נוצר עבור ${newUser.name}.`,
         });
-    }
+        const newUser = await User.register(user, password);
+        req.login(newUser, err => {
+            if (err) return next(err); // ???? TODO res.send(err) ?
+            res.send({
+                success: true,
+                msgHeb: `המשתמש "${newUser.username}" נוצר עבור ${newUser.name}.`,
+                data: req.user,
+            });
+        })
+    // } catch (e) {
+    //     res.send({
+    //         success: false,
+    //         msgHeb: e.message, // TODO Hebrew!!
+    //     });
+    // }
 }
 
 module.exports.readUser = async (req, res) => {
@@ -66,10 +57,8 @@ module.exports.updateUser = async (req, res) => {
     // newName ? user.name = newName : '';
     // newRoll ? user.roll = newRoll : '';
     if (oldPassword && newPassword) {
-        const hashedOldPw = user.password;
-        const allowed = await bcrypt.compare(oldPassword, hashedOldPw);
-        if (allowed) {
-            user.password = await bcrypt.hash(newPassword, 12);
+        const passwordUpdated = await user.changePassword(oldPassword, newPassword);
+        if (passwordUpdated) {
             changes.push('סיסמה')
         } else {
             console.log('nono')
@@ -94,43 +83,25 @@ module.exports.deleteUser = async (req, res) => {
     return res.send({
         success: true,
         msgHeb: `המשתמש "${user.username}" נמחק בהצלחה.`, //TODO
-        data: user,
+        data: [user, req.user],
     });
 }
 
-module.exports.loginUser = async (req, res) => {
-    const { username, password } = req.body;
-    // const user = await User.findOne({ username });
-    // const hashedPw = user?.hashedPassword || '';
-    // const isCorrect = await bcrypt.compare(password, hashedPw);
-    const user = await User.findAndValidate(username, password)
-    if (user) {
-        req.session.userId = user._id;
-        console.log(req.session)
-        return res.send({
-            success: true,
-            msgHeb: `המשתמש "${user.username}" זוהה בהצלחה.`, //TODO
-            data: {
-                userId: user._id,
-                name: user.name,
-                username: user.username,
-            },
-        })
-    } else {
-        delete req.session.userId;
-        console.log(req.session);
-        return res.send({
-            success: false,
-            msgHeb: `פרטי משתמש לא נכונים.`, //TODO
-            data: '',
-        })
-    }
-}
-
-module.exports.logoutUser = async (req, res) => {
-    req.session.userId = null;
+module.exports.loginUser = (req, res) => {
     return res.send({
-        success: req.session.userId === null,
-        redirect: '/users/login',
+        success: true,
+        msg: req.session,
+        data: req.user,
+    })
+}
+
+module.exports.logoutUser = (req, res) => {
+    req.logOut(function (err) {
+        if (err) return next(err); // TODO ???
     });
+    return res.send({
+        success: true,
+        msg: req.session,
+        data: req.user,
+    })
 }
