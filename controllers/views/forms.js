@@ -1,9 +1,11 @@
-const Form = require('../../models/form');
-const { dateToWeeknum } = require('../../utils/weekDate')
+const Form =                require('../../models/form');
+const { dateToWeeknum } =   require('../../utils/weekDate');
+const config =              require('../../config/default');
 
 module.exports.renderWorkerForm = async (req, res) => {
-    const id = req.params.id;
-    const form = await Form.findById(id)
+    const isLive =  config.formLive;
+    const id =      req.params.id;
+    const form =    await Form.findById(id)
     let currentYear, currentWeek;
     if (id && form) {
         currentYear = form.year;
@@ -13,9 +15,10 @@ module.exports.renderWorkerForm = async (req, res) => {
         currentYear = today.getFullYear();
         currentWeek = dateToWeeknum(today);
     }
-    res.render('forms/formWorker', { currentYear, currentWeek })
+    res.render('forms/formWorker', { isLive, currentYear, currentWeek })
 }
 
 module.exports.renderFormsControl = (req, res) => {
-    res.render('forms/formsControl', { pageTitle: 'ניהול טפסים' })
+    const isLive = config.formLive;
+    res.render('forms/formsControl', { isLive, pageTitle: 'ניהול טפסים' })
 }

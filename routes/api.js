@@ -5,6 +5,7 @@ const catchAsync =  require('../utils/catchAsync')
 const formsAPI =    require('../controllers/api/v1/forms')
 const schedsAPI =   require('../controllers/api/v1/schedules')
 const usersAPI =    require('../controllers/api/v1/users')
+const configAPI =   require('../controllers/api/v1/config')
 const router =      express.Router();
 
 router.route('/forms/:id')
@@ -38,6 +39,10 @@ router.get('/users/logout',     catchAsync(usersAPI.logoutUser));
 router.route('/users/:id')
     .get(isLoggedIn,    catchAsync(usersAPI.readUser))
     .patch(isLoggedIn,  catchAsync(usersAPI.updateUser))
-    .delete(isLoggedIn, catchAsync(usersAPI.deleteUser))
+    .delete(isLoggedIn, catchAsync(usersAPI.deleteUser));
+
+router.route('/config')
+    .get(isLoggedIn, configAPI.getLiveForm)
+    .put(isLoggedIn, configAPI.toggleLiveForm)
 
 module.exports = router;

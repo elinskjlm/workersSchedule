@@ -1,4 +1,5 @@
 const Schedule = require('../../../models/schedule');
+const config =   require('../../../config/default');
 
 module.exports.getNames = async (req, res) => {
     const year = req.query.year;
@@ -45,9 +46,19 @@ module.exports.getAllScheds = async (req, res) => {
 }
 
 module.exports.createSchdule = async (req, res) => {
-    const newSchedule = new Schedule(req.body);
-    await newSchedule.save();
-    return res.json({ redirect: '/thankyou' });
+    if (config.formLive) {
+        const newSchedule = new Schedule(req.body);
+        await newSchedule.save();
+        return res.json({
+            success: true,
+            redirect: '/thankyou'
+        });
+    } else {
+        return res.json({
+            success: false,
+            msgHeb: 'הטופס כבוי כרגע.'
+        });
+    }
 }
 
 module.exports.getScheduleById = async (req, res) => {

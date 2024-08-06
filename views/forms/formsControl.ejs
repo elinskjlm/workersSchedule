@@ -1,11 +1,14 @@
 <% layout('layouts/boilerplate') %>
 
-<div class="container-lg my-3">
+<!-- <div class="container-lg my-3">
     <h1 class="text-center">ניהול טפסים</h1>
+</div> -->
+<div class="container-lg my-3">
+    <h1 class="text-center">ניהול הטופס</h1>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<!-- Modal --> <!-- TODO Move to modals file, make sure no name collisions -->
+<!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,9 +26,25 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="container-lg">
+    <div class="row mb-3 d-flex align-items-center border border-primary rounded">
+        <div class="col-4 p-2 text-center">
+            <h5 class="m-0">מצב הטופס</h5>
+        </div>
+        <div class="col-2 p-2 d-flex justify-content-center">
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="btnradio" id="btnOnLine" autocomplete="off">
+                <label class="btn btn-sm btn-outline-primary" for="btnOnLine">זמין</label>
+             
+                <input type="radio" class="btn-check" name="btnradio" id="btnOffLine" autocomplete="off">
+                <label class="btn btn-sm btn-outline-secondary" for="btnOffLine">כבוי</label>
+              </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="container-lg">
     <div class="row mb-3 d-flex align-items-center border border-primary rounded">
         <div class="col-4 p-2 text-center">
             <h5 class="m-0">יצירת טופס חדש</h5>
@@ -34,14 +53,14 @@
             <p class="m-0">עבור שבוע:</p>
         </div>
         <div class="col-2 p-2 d-flex justify-content-center">
-            <%- include('../partials/weekPicker') %>
+            <%- //include('../partials/weekPicker') %>
         </div>
         <div class="col-2 p-2 d-flex justify-content-center">
             <div id="newBtn" class="btn btn-primary btn-sm">יצירה</div>
         </div>
     </div>
-</div>
-<div class="container-lg mb-3 align-items-center">
+</div> -->
+<!-- <div class="container-lg mb-3 align-items-center">
     <div class="row mb-3 d-flex align-items-center border border-primary rounded">
         <div class="col-4 p-2 text-center">
             <h5 class="m-0">סינון טפסים</h5>
@@ -78,6 +97,9 @@
             </table>
         </div>
     </div>
-</div>
+</div> -->
 
+<script>
+    const isLiveData = '<%- isLive %>';
+</script>
 <script src="../scripts/formsControl.js"></script>
