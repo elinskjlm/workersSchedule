@@ -1,6 +1,8 @@
-
-const tbody = document.getElementById('tbody');
-const navSched = document.getElementById('nav-schedule');
+const optionMap =   new Map();
+const tbody =       document.getElementById('tbody');
+const navSched =    document.getElementById('nav-schedule');
+const namesField =  document.getElementById('names-field');
+const namesList =   document.getElementById('names-list');
 navSched.classList.add('active');
 
 document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
@@ -8,11 +10,12 @@ document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
 })
 
 async function fetchSchedules() {
-    const onlyOpen = document.querySelector('input[name="radio-open"]:checked').value;
-    const onlyPermanent = document.querySelector('input[name="radio-permanent"]:checked').value;
-    const weekNum = weekInput.dataset.week;
-    const year = weekInput.dataset.year;
-    const params = new URLSearchParams({ onlyOpen, onlyPermanent, weekNum, year })
+    const onlyOpen =        document.querySelector('input[name="radio-open"]:checked').value;
+    const onlyPermanent =   document.querySelector('input[name="radio-permanent"]:checked').value;
+    const weekNum =         weekInput.dataset.week;
+    const year =            weekInput.dataset.year;
+    const name =            namesField.value;
+    const params = new URLSearchParams({ onlyOpen, onlyPermanent, weekNum, year, name })
     const result = await fetch('/api/v1/schedules?' + params);
     const schedules = await result.json();
     return schedules
@@ -172,3 +175,32 @@ updateButton.addEventListener('click', async () => {
 })
 
 loadSchedulesTable()
+
+async function getAvailableNames() {
+    const response = await fetch('/api/v1/schedules/getNames')
+    const availableNames = await response.json()
+    return availableNames;
+}
+
+
+function loadNameList(availableNames) {
+    namesList.textContent = '';
+    if (availableNames) {
+        availableNames.forEach(name => {
+            const option = document.createElement('option');
+            option.setAttribute('value', name.name);
+            option.setAttribute('data-id', name._id);
+            namesList.appendChild(option)
+            optionMap.set(option.value, option.dataset.id);
+        })
+    }
+}
+
+async function refreshNames() {
+    namesField.value = '';
+    const availableNames = await getAvailableNames();
+    console.dir(availableNames)
+    loadNameList(availableNames);
+}
+
+refreshNames();

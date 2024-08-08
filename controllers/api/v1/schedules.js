@@ -2,10 +2,10 @@ const Schedule = require('../../../models/schedule');
 const config =   require('../../../config/default');
 
 module.exports.getNames = async (req, res) => {
-    const year = req.query.year;
-    const weekNum = req.query.weeknum;
-    if (!year || !weekNum) return res.sendStatus(400) // bad request
-    const availableNames = await Schedule.find({ weekNum, year }, { 'name': 1, '_id': 1 })
+    const year =    req.query.year || '';
+    const weekNum = req.query.weeknum || '';
+    const params = (year && weekNum) ? { weekNum, year } : {};
+    const availableNames = await Schedule.find(params, { 'name': 1, '_id': 1 })
     res.json(availableNames)
 }
 
@@ -41,6 +41,7 @@ module.exports.getAllScheds = async (req, res) => {
         params.weekNum = req.query.weekNum;
         params.year = req.query.year;
     }
+    req.query.name ? params.name = req.query.name : '';
     const allSchedules = await Schedule.find(params);
     res.json(allSchedules)
 }

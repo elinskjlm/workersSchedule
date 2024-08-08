@@ -27,7 +27,7 @@
 
 <div class="container-lg mb-3 align-items-center">
     <div class="row mb-3 d-flex align-items-center border border-info rounded">
-        <div class="col-2 p-2 text-center">
+        <div class="p-2 text-center">
             <h5 class="m-0">סינון סידורים</h5>
         </div>
         <div class="col-2 p-2 d-flex justify-content-center">
@@ -56,10 +56,18 @@
                 <label class="btn btn-outline-info" for="radio-permanent-no">רק רגילים</label>
             </div>
         </div>
-        <div class="col-2 p-2 d-flex justify-content-center">
+        <div class="col-3 p-2 d-flex justify-content-center">
             <%- include('../partials/weekPicker') %>
         </div>
-        <div class="col-2 p-2 d-flex justify-content-center">
+        <div class="col-4 p-2 d-flex justify-content-center">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text">שם</span>
+                <datalist id="names-list"></datalist>
+                <input type="text" id="names-field" name="names-field" list="names-list" class="form-control"
+                    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+            </div>
+        </div>
+        <div class="col-1 p-2 d-flex justify-content-center">
             <div id="update-button" class="btn btn-info btn-sm">עדכון</div>
         </div>
 
