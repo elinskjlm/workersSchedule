@@ -41,10 +41,8 @@ function createActionButtons(i, scheduleId, isOpen) {
                 id = `btnOn[${i}]`;
                 text = "לטיפול";
                 color = "info";
-                // name = `radio[${i}]`;
-                name = `toggle[${i}]`; // TODO type?
-                // type = "radio";
-                type = "checkbox"; // TODO type?
+                name = `toggle[${i}]`;
+                type = "checkbox";
                 action = toggleState;
                 toCheck = isOpen;
                 break;
@@ -53,10 +51,8 @@ function createActionButtons(i, scheduleId, isOpen) {
                 id = `btnOff[${i}]`;
                 text = "טופל";
                 color = "secondary";
-                // name = `radio[${i}]`;
-                name = `toggle[${i}]`; // TODO type?
-                // type = "radio";
-                type = "checkbox"; // TODO type?
+                name = `toggle[${i}]`;
+                type = "checkbox";
                 action = toggleState;
                 toCheck = !isOpen;
                 break;
@@ -72,7 +68,7 @@ function createActionButtons(i, scheduleId, isOpen) {
                 break;
 
             default:
-                throw new Error('only "on" or "off"'); // TODO
+                throw new Error('only "on", "off", or "del"'); // TODO
         }
 
         const inputAttr = {
@@ -102,7 +98,7 @@ function createActionButtons(i, scheduleId, isOpen) {
     }
 
     const { input: offInput, label: offLabel } = createInput("off", scheduleId, isOpen);
-    const { input: onInput, label: onLabel } = createInput("on", scheduleId, isOpen);
+    const { input: onInput,  label: onLabel  } = createInput("on",  scheduleId, isOpen);
     const { input: delInput, label: delLabel } = createInput("del", scheduleId);
 
 
@@ -207,3 +203,8 @@ async function refreshNames() {
 }
 
 refreshNames();
+
+// function resetFilters() {
+//     refreshNames();
+//     // TODO the rest of the fields
+// }
