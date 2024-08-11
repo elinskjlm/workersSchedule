@@ -11,11 +11,12 @@ document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
 
 async function fetchSchedules() {
     const onlyOpen =        document.querySelector('input[name="radio-open"]:checked').value;
-    const onlyPermanent =   document.querySelector('input[name="radio-permanent"]:checked').value;
+    const onlyProper =      document.querySelector('input[name="radio-proper"]:checked').value;
+    const onlySeen =        document.querySelector('input[name="radio-seen"]:checked').value;
     const weekNum =         weekInput.dataset.week;
     const year =            weekInput.dataset.year;
     const name =            namesField.value;
-    const params = new URLSearchParams({ onlyOpen, onlyPermanent, weekNum, year, name })
+    const params = new URLSearchParams({ onlyOpen, onlyProper, onlySeen, weekNum, year, name })
     const result = await fetch('/api/v1/schedules?' + params);
     const schedules = await result.json();
     return schedules
@@ -38,7 +39,7 @@ function createActionButtons(i, scheduleId, isOpen) {
         switch (role) {
             case "on":
                 id = `btnOn[${i}]`;
-                text = "פתוח";
+                text = "לטיפול";
                 color = "info";
                 // name = `radio[${i}]`;
                 name = `toggle[${i}]`; // TODO type?
@@ -50,7 +51,7 @@ function createActionButtons(i, scheduleId, isOpen) {
 
             case "off":
                 id = `btnOff[${i}]`;
-                text = "סגור";
+                text = "טופל";
                 color = "secondary";
                 // name = `radio[${i}]`;
                 name = `toggle[${i}]`; // TODO type?
@@ -134,6 +135,8 @@ async function loadSchedulesTable() {
             <td>${schedule.name}</td>
             <td>${schedule.dateDay}, <small class="text-muted text-sm">${schedule.dateHour}</small></td>
             <td id="actions[${i}]"></td>
+            <td>${schedule.isProper ? '👍<small>תקין</small>' : '😡<small>לא תקין</small>'}</td>
+            <td>${schedule.isSeen ? '👀<small>נקרא</small>' : '🕶️<small>לא נקרא</small>'}</td>
             <td><a href="/schedules/read?scheduleid=${schedule._id}" target="_blank">פתיחה</a></td>
         `;
         tbody.appendChild(tr);

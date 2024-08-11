@@ -71,11 +71,11 @@ const ScheduleSchema = new Schema({
         type: String,
         maxLength: [250, 'Comment max length is 250.']
     },
-    toIgnore: {
+    isProper: {
         type: Boolean,
-        default: false
+        default: true
     },
-    wasSeen: {
+    isSeen: {
         type: Boolean,
         default: false
     },

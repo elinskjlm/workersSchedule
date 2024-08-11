@@ -32,11 +32,16 @@ module.exports.getAllScheds = async (req, res) => {
         case 'off': params.isOpen = false; break;
         default: break;
     }
-    // switch (req.query.onlyPermanent) { /* For future use */
-    //     case 'on':  params.isPermanent = true;  break;
-    //     case 'off': params.isPermanent = false; break;
-    //     default: break;
-    // }
+    switch (req.query.onlyProper) {
+        case 'on':  params.isProper = true;  break;
+        case 'off': params.isProper = false; break;
+        default: break;
+    }
+    switch (req.query.onlySeen) {
+        case 'on':  params.isSeen = true;  break;
+        case 'off': params.isSeen = false; break;
+        default: break;
+    }
     if (req.query.weekNum != 'undefined' && req.query.year != 'undefined') {
         params.weekNum = req.query.weekNum;
         params.year = req.query.year;
@@ -69,12 +74,13 @@ module.exports.getScheduleById = async (req, res) => {
 }
 
 module.exports.toggleSchedule = async (req, res) => {
-    // TODO access: organizer only
-    // TODO add validation!!
     const { id } = req.params;
-    if (['on', 'off'].includes(req.body.open)) {
-        const isOpen = req.body.open === 'on' ? true : false;
-        const schedule = await Schedule.findByIdAndUpdate(id, { isOpen }, { runValidators: true, new: true });
+    const params = {};
+    ['on', 'off'].includes(req.body.open) ? params.isOpen = req.body.open === 'on' : '';
+    ['on', 'off'].includes(req.body.seen) ? params.isSeen = req.body.seen === 'on' : '';
+    ['on', 'off'].includes(req.body.proper) ? params.isProper = req.body.proper === 'on' : '';
+    if (params) {
+        const schedule = await Schedule.findByIdAndUpdate(id, params, { runValidators: true, new: true });
         return res.json(schedule)
     } else {
         return res.json({ error: 'only "on" or "off"' }) // TODO
