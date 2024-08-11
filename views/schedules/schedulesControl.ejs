@@ -27,50 +27,65 @@
 
 <div class="container-lg mb-3 align-items-center">
     <div class="row mb-3 d-flex align-items-center border border-info rounded">
-        <div class="p-2 text-center">
-            <h5 class="m-0">סינון סידורים</h5>
+        <div class="row p-2 text-center">
+            <h5 class="col m-0">סינון סידורים</h5>
+            <div id="update-button" class="col-1 btn btn-info btn-sm">עדכון</div>
         </div>
-        <div class="col-2 p-2 d-flex justify-content-center">
+        <div class="row">
+        <div class="col-2 py-2 d-flex justify-content-center">
             <div class="btn-group-vertical btn-group-sm" role="group" aria-label="radio toggle button group">
                 <input type="radio" class="btn-check" name="radio-open" id="radio-open-yes" value="on"
                     autocomplete="off">
-                <label class="btn btn-outline-info" for="radio-open-yes">רק פתוחים</label>
+                <label class="btn btn-outline-info" for="radio-open-yes">לטיפול</label>
                 <input type="radio" class="btn-check" name="radio-open" id="radio-open-neutral" value=""
                     autocomplete="off" checked>
                 <label class="btn btn-outline-info" for="radio-open-neutral">לא משנה</label>
                 <input type="radio" class="btn-check" name="radio-open" id="radio-open-no" value="off"
                     autocomplete="off">
-                <label class="btn btn-outline-info" for="radio-open-no">רק סגורים</label>
+                <label class="btn btn-outline-info" for="radio-open-no">טופלו</label>
             </div>
         </div>
-        <div class="col-2 p-2 d-flex justify-content-center">
-            <div class="btn-group-vertical btn-group-sm" role="group" aria-label="radio toggle button group">
-                <input type="radio" class="btn-check" name="radio-permanent" id="radio-permanent-yes" value="on"
-                    autocomplete="off" disabled>
-                <label class="btn btn-outline-info" for="radio-permanent-yes">רק קבועים</label>
-                <input type="radio" class="btn-check" name="radio-permanent" id="radio-permanent-neutral"
-                    value="" autocomplete="off" checked disabled>
-                <label class="btn btn-outline-info" for="radio-permanent-neutral">לא משנה</label>
-                <input type="radio" class="btn-check" name="radio-permanent" id="radio-permanent-no" value="off"
-                    autocomplete="off" disabled>
-                <label class="btn btn-outline-info" for="radio-permanent-no">רק רגילים</label>
+            <div class="col-2 py-2 d-flex justify-content-center">
+                <div class="btn-group-vertical btn-group-sm" role="group" aria-label="radio toggle button group">
+                    <input type="radio" class="btn-check" name="radio-proper" id="radio-proper-yes" value="on"
+                        autocomplete="off">
+                    <label class="btn btn-outline-info" for="radio-proper-yes">תקינים</label>
+                    <input type="radio" class="btn-check" name="radio-proper" id="radio-proper-neutral"
+                        value="" autocomplete="off" checked>
+                    <label class="btn btn-outline-info" for="radio-proper-neutral">לא משנה</label>
+                    <input type="radio" class="btn-check" name="radio-proper" id="radio-proper-no" value="off"
+                        autocomplete="off">
+                    <label class="btn btn-outline-info" for="radio-proper-no">לא תקינים</label>
+                </div>
+            </div>
+            <div class="col-2 py-2 d-flex justify-content-center">
+                <div class="btn-group-vertical btn-group-sm" role="group" aria-label="radio toggle button group">
+                    <input type="radio" class="btn-check" name="radio-seen" id="radio-seen-yes" value="on"
+                        autocomplete="off">
+                    <label class="btn btn-outline-info" for="radio-seen-yes">נקראו</label>
+                    <input type="radio" class="btn-check" name="radio-seen" id="radio-seen-neutral"
+                        value="" autocomplete="off" checked>
+                    <label class="btn btn-outline-info" for="radio-seen-neutral">לא משנה</label>
+                    <input type="radio" class="btn-check" name="radio-seen" id="radio-seen-no" value="off"
+                        autocomplete="off">
+                    <label class="btn btn-outline-info" for="radio-seen-no">לא נקראו</label>
+                </div>
+            </div>
+            <div class="col-3 py-2 d-flex justify-content-center">
+                <%- include('../partials/weekPicker') %>
+            </div>
+            <div class="col-3 py-2 d-flex justify-content-center">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text">שם</span>
+                    <datalist id="names-list"></datalist>
+                    <input type="text" id="names-field" name="names-field" list="names-list" class="form-control"
+                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+                </div>
             </div>
         </div>
-        <div class="col-3 p-2 d-flex justify-content-center">
-            <%- include('../partials/weekPicker') %>
-        </div>
-        <div class="col-4 p-2 d-flex justify-content-center">
-            <div class="input-group input-group-sm">
-                <span class="input-group-text">שם</span>
-                <datalist id="names-list"></datalist>
-                <input type="text" id="names-field" name="names-field" list="names-list" class="form-control"
-                    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
-            </div>
-        </div>
-        <div class="col-1 p-2 d-flex justify-content-center">
+        <!-- <div class="col-1 py-2 d-flex justify-content-center">
             <div id="update-button" class="btn btn-info btn-sm">עדכון</div>
-        </div>
-
+        </div> -->
     </div>
     <div class="row d-flex align-items-center border border-info rounded">
         <div class="table-responsive">
@@ -83,6 +98,8 @@
                     <th>שם מלא</th>
                     <th>מועד הגשה</th>
                     <th>פעולות</th>
+                    <th>תקין?</th>
+                    <th>נקרא?</th>
                     <th>לינק</th>
                 </thead>
                 <tbody id="tbody">
