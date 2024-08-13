@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const user = require('./models/user');
 
 const daySchema = Joi.object({
     morning: Joi.object({
@@ -26,7 +27,7 @@ module.exports.scheduleSchema = Joi.object({
     timeSubmitted:  Joi.date().required().default(Date.now),
     year:           Joi.number().required().min(2020).max(2120),
     weekNum:        Joi.number().required().min(1).max(53),
-    name:           Joi.string().required().min(2).max(30),
+    name:           Joi.string().alphanum().required().min(2).max(30),
     schedule:       Joi.object({
         day1: daySchema,
         day2: daySchema,
@@ -36,11 +37,10 @@ module.exports.scheduleSchema = Joi.object({
         day6: daySchema,
         day7: daySchema,
     }),
-    comment:        Joi.string().allow(null, '').max(250),
-    status:         Joi.any(), //TODO TEMP
-    // toIgnore:       Joi.boolean().required().default(false),
-    // wasSeen:        Joi.boolean().required().default(false),
-    // isOpen:         Joi.boolean().required().default(true),
+    comment:        Joi.string().alphanum().allow(null, '').max(250),
+    isProper:       Joi.boolean().required().default(true),
+    isSeen:         Joi.boolean().required().default(false),
+    isOpen:         Joi.boolean().required().default(true),
 }).required()
 
 module.exports.formSchema = Joi.object({
@@ -50,4 +50,13 @@ module.exports.formSchema = Joi.object({
     isLive:         Joi.boolean().required().default(false),
 }).required()
 
-
+module.exports.userSchema = Joi.object({
+    name:           Joi.string().alphanum().required().min(2).max(30),
+    username:       Joi.string().alphanum().required().min(3).max(10),
+    password:       Joi.string()
+                       .pattern(new RegExp('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$')).required(),
+    roll:           Joi.string().valid('inspector', 'dev', 'organizer').required().default('inspector'),
+    created:        Joi.date().default(Date.now), // TODO ??
+    lastSeen:       Joi.date().default(Date.now),
+    lastModified:   Joi.date().default(Date.now),
+})

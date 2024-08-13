@@ -9,15 +9,11 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'Name cannot be blank'],
     },
-    // username: {
-    //     type: String,
-    //     required: [true, 'Username cannot be blank'],
-    //     unique: true,
-    // },
-    // password: {
-    //     type: String,
-    //     required: [true, 'Password cannot be blank'],
-    // },
+    username: {
+        type: String,
+        required: [true, 'Username cannot be blank'],
+        unique: true,
+    },
     roll: {
         type: String,
         enum: ['dev', 'admin', 'inspector'],
