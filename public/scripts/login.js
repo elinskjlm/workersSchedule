@@ -1,6 +1,8 @@
-const loginButton = document.getElementById('btnLogin');
-const usernameField = document.getElementById('loginUsername');
-const passwordField = document.getElementById('loginPassword');
+const loginButton =     document.getElementById('btnLogin');
+const usernameField =   document.getElementById('loginUsername');
+const passwordField =   document.getElementById('loginPassword');
+const toast =           document.getElementById('toast');
+const toastBody =       document.getElementById('toastBody');
 
 loginButton.addEventListener('click', async () => {
     if (usernameField.value && passwordField.value) {
@@ -9,9 +11,7 @@ loginButton.addEventListener('click', async () => {
             console.log('success')
             redirect();
         } else {
-            console.log('fail')
-            console.log(answer.msgHeb)
-            // TODO
+            showToast(answer.msgHeb)
         }
     }
 })
@@ -34,4 +34,10 @@ async function attemptLogin(username, password) {
 function redirect(dest='') {
     dest ||= '/schedules/control';
     window.location = dest;
+}
+
+function showToast(msg) {
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toast)
+    toastBody.innerHTML = msg;
+    toastBootstrap.show()
 }
