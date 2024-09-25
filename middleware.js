@@ -24,7 +24,13 @@ module.exports.validateUser = (req, res, next) => {
     const { error } = userSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',\t');
-        throw new Error(msg, 400)
+        // throw new Error(msg, 400)
+        return res.send({
+            success: false,
+            msg,
+            // msgHeb: `שגיאה: ${msg}`,
+            msgHeb: 'Note: ' +  msg,
+        });
     } else {
         next();
     }
