@@ -1,5 +1,27 @@
-const Joi =  require('joi');
-const user = require('./models/user');
+const BaseJoi =  require('joi');
+const sanitizeHTML = require('sanitize-html');
+
+const extention = (joi) => ({
+    type: 'string',
+    base: joi.string(),
+    messages: {
+        'string.escapeHTNL': '{{#label}} must not include HTML'
+    },
+    rules: {
+        escapeHTML: {
+            validate(value, helpers) {
+                const clean = sanitizeHTML(value, {
+                    allowedTags: [],
+                    allowedAttributes: {},
+                });
+                if (clean !== value) return helpers.error('string.escapeHTML', { value });
+                return clean
+            }
+        }
+    }
+})
+
+Joi = BaseJoi.extend(extention);
 
 const daySchema = Joi.object({
     morning: Joi.object({
