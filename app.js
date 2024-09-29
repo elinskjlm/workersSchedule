@@ -6,6 +6,7 @@ const ejsMate =         require('ejs-mate');
 const passport =        require('passport');
 const LocalStrategy =   require('passport-local');
 const mongoSanitize =   require('express-mongo-sanitize');
+const helmet =          require('helmet');
 // const { validateSchedule, validateForm } = require('./middleware');
 // const formsView =   require('./controllers/views/forms')
 // const schedsView =  require('./controllers/views/schedules')
@@ -50,6 +51,39 @@ app.use(mongoSanitize());
 // app.use(mongoSanitize({
 //     replaceWith: '_',
 // }));
+
+const scriptSrcUrls = [
+    "https://cdn.jsdelivr.net/",
+];
+
+const styleSrcUrls = [
+    "https://cdn.jsdelivr.net/",
+];
+
+const connectSrcUrls = [];
+
+const fontSrcUrls = [];
+
+app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc:   [],
+          connectSrc:   ["'self'", ...connectSrcUrls],
+          fontSrc:      ["'self'", ...fontSrcUrls],
+          scriptSrc:    ["'self'", "'unsafe-inline'", ...scriptSrcUrls],
+          styleSrc:     ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+          workerSrc:    ["'self'", "blob:"],
+          objectSrc:    [],
+          imgSrc:       [
+            "'self'",
+            "blob:",
+            "data:",
+          ]
+        },
+      },
+    })
+  );
 
 app.use(passport.initialize());
 app.use(passport.session()); // Must be after `app.use(session(sessionConfig))`
