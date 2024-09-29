@@ -5,6 +5,7 @@ const session =         require('express-session');
 const ejsMate =         require('ejs-mate');
 const passport =        require('passport');
 const LocalStrategy =   require('passport-local');
+const mongoSanitize =   require('express-mongo-sanitize');
 // const { validateSchedule, validateForm } = require('./middleware');
 // const formsView =   require('./controllers/views/forms')
 // const schedsView =  require('./controllers/views/schedules')
@@ -12,7 +13,7 @@ const LocalStrategy =   require('passport-local');
 // const schedsAPI =   require('./controllers/api/v1/schedules')
 const apiRoutes =       require('./routes/api');
 const viewsRoutes =     require('./routes/views');
-const User =            require('./models/user')
+const User =            require('./models/user');
 
 const dbUrl = 'mongodb://localhost:27017/sidur';
 const app = express();
@@ -44,6 +45,11 @@ const sessionConfig = {
     }
 }
 app.use(session(sessionConfig))
+
+app.use(mongoSanitize());
+// app.use(mongoSanitize({
+//     replaceWith: '_',
+// }));
 
 app.use(passport.initialize());
 app.use(passport.session()); // Must be after `app.use(session(sessionConfig))`
