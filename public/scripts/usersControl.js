@@ -21,7 +21,8 @@ btnModalCreate.addEventListener('click', async (e) => {
     const answer = await result.json()
     loadUserssTable();
     if (answer.success) {
-        showToast('הפעולה הצליחה', 'המשתמש נוצר בהצלחה')
+        showToast('הפעולה הצליחה', `המשתמש נוצר בהצלחה. הנך מחובר כעת כ-${newUsername.value}`) // TODO rely on username from DB?
+        document.getElementById('nav-username').innerHTML = newUsername.value
     } else {
         showToast('הפעולה נכשלה', answer.msgHeb)
         const newUserModal =     new bootstrap.Modal('#newUserModal');
