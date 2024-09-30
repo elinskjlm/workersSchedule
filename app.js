@@ -54,6 +54,7 @@ app.use(mongoSanitize());
 
 const scriptSrcUrls = [
     "https://cdn.jsdelivr.net/",
+    "https://code.jquery.com/",
 ];
 
 const styleSrcUrls = [
