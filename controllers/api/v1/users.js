@@ -6,7 +6,7 @@ module.exports.getAllUsers = async (req, res) => {
 }
 
 module.exports.createUser = async (req, res) => {
-    // try { // TODO
+    try {
         const { name, username, password, role } = req.body;
         const user = new User({
             name,
@@ -25,12 +25,12 @@ module.exports.createUser = async (req, res) => {
                 data: req.user,
             });
         })
-    // } catch (e) {
-    //     res.send({
-    //         success: false,
-    //         msgHeb: e.message, // TODO Hebrew!!
-    //     });
-    // }
+    } catch (e) {
+        res.send({
+            success: false,
+            msgHeb: e.message, // TODO Hebrew!!
+        });
+    }
 }
 
 module.exports.readUser = async (req, res) => {
