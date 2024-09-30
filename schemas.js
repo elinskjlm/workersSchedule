@@ -77,7 +77,7 @@ module.exports.userSchema = Joi.object({
     username:       Joi.string().alphanum().required().min(3).max(10),
     password:       Joi.string()
                        .pattern(new RegExp('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$')).required(),
-    roll:           Joi.string().valid('inspector', 'dev', 'organizer').required().default('inspector'),
+    role:           Joi.string().valid('inspector', 'dev', 'organizer').required().default('inspector'),
     created:        Joi.date().default(Date.now), // TODO ??
     lastSeen:       Joi.date().default(Date.now),
     lastModified:   Joi.date().default(Date.now),
