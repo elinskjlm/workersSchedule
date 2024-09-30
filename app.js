@@ -111,6 +111,13 @@ app.use('/api/v1', apiRoutes)
 
 // app.all('*', (req, res) => res.redirect('/forms/apply'))
 
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = 'Unkown Error';
+  console.log(`⚠️ ${err}`);
+  res.status(statusCode).render(`error`, { err });
+})
+
 app.listen(8080, () => {
     console.log('listeningggg');
 })
