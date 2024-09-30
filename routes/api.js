@@ -18,7 +18,7 @@ router.route('/forms')
 
 router.route('/schedules')
     .get(isLoggedIn, /*catchAsync(*/schedsAPI.getAllScheds/*)*/)
-    .post(isLoggedIn, /*catchAsync(*/validateSchedule, schedsAPI.createSchdule/*)*/);
+    .post(/*catchAsync(*/validateSchedule, schedsAPI.createSchdule/*)*/);
 
 router.get('/schedules/getNames', isLoggedIn, catchAsync(schedsAPI.getNames));
 // router.get('/schedules/getWeeks', catchAsync(schedsAPI.getWeeks));

@@ -21,10 +21,8 @@ const scheduleWrapper = {
   weekNum,
   year,
   name: "",
-  schedule: {
-  },
+  schedule: {},
   comment: "",
-  status: 0
 }
 
 for (let day = 1; day <= 7; day++) {

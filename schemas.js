@@ -49,7 +49,7 @@ module.exports.scheduleSchema = Joi.object({
     timeSubmitted:  Joi.date().required().default(Date.now),
     year:           Joi.number().required().min(2020).max(2120),
     weekNum:        Joi.number().required().min(1).max(53),
-    name:           Joi.string().alphanum().required().min(2).max(30),
+    name:           Joi.string().required().min(2).max(30),
     schedule:       Joi.object({
         day1: daySchema,
         day2: daySchema,
@@ -59,10 +59,10 @@ module.exports.scheduleSchema = Joi.object({
         day6: daySchema,
         day7: daySchema,
     }),
-    comment:        Joi.string().alphanum().allow(null, '').max(250),
-    isProper:       Joi.boolean().required().default(true),
-    isSeen:         Joi.boolean().required().default(false),
-    isOpen:         Joi.boolean().required().default(true),
+    comment:        Joi.string().allow(null, '').max(250),
+    isProper:       Joi.boolean().default(true),
+    isSeen:         Joi.boolean().default(false),
+    isOpen:         Joi.boolean().default(true),
 }).required()
 
 module.exports.formSchema = Joi.object({
