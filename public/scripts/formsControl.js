@@ -14,13 +14,13 @@ if (isLive) {
 }
 
 btnOnLine.addEventListener('click', () => {
-    console.log('to true')
     toggleOnline(true);
+    window.location.reload(); // TODO update bulb without reload page
 })
 
 btnOffLine.addEventListener('click', () => {
-    console.log('to false')
     toggleOnline(false);
+    window.location.reload(); // TODO update bulb without reload page
 })
 
 async function toggleOnline(state) {

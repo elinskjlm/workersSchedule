@@ -1,6 +1,11 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">הסידוריה</a>
+        <div class="navbar-item d-flex align-items-center">
+            <a class="navbar-brand" href="/">הסידוריה</a>
+            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-trigger="hover focus" data-bs-content="מצב הטופס">
+                <a id="status-bulb" class="status-light" href="/forms/control"></a>
+            </span>
+        </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
