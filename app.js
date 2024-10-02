@@ -7,11 +7,6 @@ const passport =        require('passport');
 const LocalStrategy =   require('passport-local');
 const mongoSanitize =   require('express-mongo-sanitize');
 const helmet =          require('helmet');
-// const { validateSchedule, validateForm } = require('./middleware');
-// const formsView =   require('./controllers/views/forms')
-// const schedsView =  require('./controllers/views/schedules')
-// const formsAPI =    require('./controllers/api/v1/forms')
-// const schedsAPI =   require('./controllers/api/v1/schedules')
 const apiRoutes =       require('./routes/api');
 const viewsRoutes =     require('./routes/views');
 const User =            require('./models/user');
@@ -96,7 +91,7 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     // TEMP
     console.log('┌───────────────────────────');
-    console.log('│', req.user?.id);
+    console.log('│', req.user?.username);
     console.log('│', req.method, req.originalUrl);
     console.log('└───────────────────────────');
     next();
