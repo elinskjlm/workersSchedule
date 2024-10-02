@@ -1,4 +1,4 @@
-const { scheduleSchema, formSchema } = require('./schemas')
+const { scheduleSchema, formSchema, userSchema } = require('./schemas')
 
 module.exports.validateSchedule = (req, res, next) => {
     const { error } = scheduleSchema.validate(req.body);
@@ -11,11 +11,26 @@ module.exports.validateSchedule = (req, res, next) => {
 }
 
 module.exports.validateForm = (req, res, next) => {
-    console.log(req.body);
     const { error } = formSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',\t');
         throw new Error(msg, 400)
+    } else {
+        next();
+    }
+}
+
+module.exports.validateUser = (req, res, next) => {
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',\t');
+        // throw new Error(msg, 400)
+        return res.send({
+            success: false,
+            msg,
+            // msgHeb: `שגיאה: ${msg}`,
+            msgHeb: 'Note: ' +  msg,
+        });
     } else {
         next();
     }

@@ -19,127 +19,134 @@
                 <span class="text-muted fw-bold" id="end-date">#</span> (מס' <span class="text-muted" id="weeknum"></span>)
             </h4>
         </div>
+        <% if (!isLive) { %>
+            <div class="alert alert-danger text-center" role="alert">
+                הטופס נעול להגשה כרגע.
+            </div>
+        <% } %>
         <form>
-            <div class="container mb-5 col-8">
-                <label class="form-label" for="fullName" id="uniqueID">
-                    <h5>שם מלא</h5>
-                </label>
-                <input class="form-control" type="text" name="fullName" id="fullName"
-                    placeholder="שם פרטי ומשפחה" maxlength="25" required>
-            </div>
-            <div class="container mb-5">
-                <label class="form-label" for="fullName">
-                    <h5>בחירת משמרות</h5>
-                </label>
-                <div class="row border-bottom">
-                    <div class="col p-2 d-flex text-center justify-content-center align-items-center">
-                        יום בשבוע
-                    </div>
-                    <div class="col p-2 d-flex text-center justify-content-center align-items-center">
-                        משמרת בוקר
-                    </div>
-                    <div class="col p-2 d-flex text-center justify-content-center align-items-center">
-                        משמרת צהרים
-                    </div>
-                    <div class="col p-2 d-flex text-center justify-content-center align-items-center">
-                        משמרת לילה
-                    </div>
+            <fieldset disabled>
+                <div class="container mb-5 col-8">
+                    <label class="form-label" for="fullName" id="uniqueID">
+                        <h5>שם מלא</h5>
+                    </label>
+                    <input class="form-control" type="text" name="fullName" id="fullName"
+                        placeholder="שם פרטי ומשפחה" maxlength="25" required>
                 </div>
-                <% const days=["ראשון", "שני" , "שלישי" , "רביעי" , "חמישי" , "שישי" , "שבת" ]; %>
-                <% for (let i=0; i < 7; i++) { %>
-
-                    <!-- 1st ROW (shifts) -->
-                    <div class="row row-shifts day-<%= i+1 %>">
-
-                        <div class="col p-2 d-flex justify-content-center">
-                            <%= days[i] %>
+                <div class="container mb-5">
+                    <label class="form-label" for="fullName">
+                        <h5>בחירת משמרות</h5>
+                    </label>
+                    <div class="row border-bottom">
+                        <div class="col p-2 d-flex text-center justify-content-center align-items-center">
+                            יום בשבוע
                         </div>
-
-                        <div class="col p-2 d-flex justify-content-center">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input shift-toggle has-ot"
-                                    id="shifts[<%= i + 1 %>][morning][reg]"
-                                    name="shifts[<%= i + 1 %>][morning][reg]"
-                                    data-day="<%= i + 1 %>" data-shift="morning" data-category="reg">
-                            </div>
+                        <div class="col p-2 d-flex text-center justify-content-center align-items-center">
+                            משמרת בוקר
                         </div>
-
-                        <div class="col p-2 d-flex justify-content-center">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input shift-toggle"
-                                    id="shifts[<%= i + 1 %>][noon][reg]"
-                                    name="shifts[<%= i + 1 %>][noon][reg]"
-                                    data-day="<%= i + 1 %>" data-shift="noon" data-category="reg">
-                            </div>
+                        <div class="col p-2 d-flex text-center justify-content-center align-items-center">
+                            משמרת צהרים
                         </div>
-
-                        <div class="col p-2 d-flex justify-content-center">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input shift-toggle has-ot"
-                                    id="shifts[<%= i + 1 %>][night][reg]"
-                                    name="shifts[<%= i + 1 %>][night][reg]"
-                                    data-day="<%= i + 1 %>" data-shift="night" data-category="reg">
-                            </div>
+                        <div class="col p-2 d-flex text-center justify-content-center align-items-center">
+                            משמרת לילה
                         </div>
-
                     </div>
+                    <% const days=["ראשון", "שני" , "שלישי" , "רביעי" , "חמישי" , "שישי" , "שבת" ]; %>
+                    <% for (let i=0; i < 7; i++) { %>
 
-                    <!-- 2cd ROW (OTs) -->
-                    <div class="row row-ot day-<%= i+1 %> border-bottom hidden">
+                        <!-- 1st ROW (shifts) -->
+                        <div class="row row-shifts day-<%= i+1 %>">
 
-                        <div class="col p-2 d-flex justify-content-center">
-                            <!-- for maintaining structure  -->
-                        </div>
-
-                        <div class="col d-flex justify-content-center align-items-start">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input ot-toggle" disabled
-                                    id="ots[<%= i + 1 %>][morning][ot1]"
-                                    name="ots[<%= i + 1 %>][morning][ot]"
-                                    data-day="<%= i + 1 %>" data-shift="morning" data-category="ot1">
-                                <label class="form-check-label small"
-                                    for="ots[<%= i + 1 %>][morning][ot]">עד 19</label>
-                            </div>
-                        </div>
-
-                        <div class="col p-2 d-flex justify-content-center align-items-center">
-                            <!-- for maintaining structure  -->
-                        </div>
-
-                        <div class="col d-flex flex-wrap justify-content-center align-items-start">
-
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input ot-toggle" disabled
-                                    id="ots[<%= i + 1 %>][night][ot1]"
-                                    name="ots[<%= i + 1 %>][night][ot][1]"
-                                    data-day="<%= i + 1 %>" data-shift="night" data-category="ot1">
-                                <label class="form-check-label small"
-                                    for="ots[<%= i + 1 %>][night][ot][1]">מ-19</label>
+                            <div class="col p-2 d-flex justify-content-center">
+                                <%= days[i] %>
                             </div>
 
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input ot-toggle" disabled
-                                    id="ots[<%= i + 1 %>][night][ot2]"
-                                    name="ots[<%= i + 1 %>][night][ot][2]"
-                                    data-day="<%= i + 1 %>" data-shift="night" data-category="ot2">
-                                <label class="form-check-label small"
-                                    for="ots[<%= i + 1 %>][night][ot][2]">עד 11</label>
+                            <div class="col p-2 d-flex justify-content-center">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input shift-toggle has-ot"
+                                        id="shifts[<%= i + 1 %>][morning][reg]"
+                                        name="shifts[<%= i + 1 %>][morning][reg]"
+                                        data-day="<%= i + 1 %>" data-shift="morning" data-category="reg">
+                                </div>
+                            </div>
+
+                            <div class="col p-2 d-flex justify-content-center">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input shift-toggle"
+                                        id="shifts[<%= i + 1 %>][noon][reg]"
+                                        name="shifts[<%= i + 1 %>][noon][reg]"
+                                        data-day="<%= i + 1 %>" data-shift="noon" data-category="reg">
+                                </div>
+                            </div>
+
+                            <div class="col p-2 d-flex justify-content-center">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input shift-toggle has-ot"
+                                        id="shifts[<%= i + 1 %>][night][reg]"
+                                        name="shifts[<%= i + 1 %>][night][reg]"
+                                        data-day="<%= i + 1 %>" data-shift="night" data-category="reg">
+                                </div>
                             </div>
 
                         </div>
 
-                    </div>
-                <% } %>
-            </div>
-            <div class="container mb-5">
-                <label class="form-label" for="comment">
-                    <h5>הערות מיוחדות</h5>
-                </label>
-                <input class="form-control" type="text" name="comment" id="comment" maxlength="500">
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary mt-3" id="submitBtn">הגשת הסידור</button>
-            </div>
+                        <!-- 2cd ROW (OTs) -->
+                        <div class="row row-ot day-<%= i+1 %> border-bottom hidden">
+
+                            <div class="col p-2 d-flex justify-content-center">
+                                <!-- for maintaining structure  -->
+                            </div>
+
+                            <div class="col d-flex justify-content-center align-items-start">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input ot-toggle"
+                                        id="ots[<%= i + 1 %>][morning][ot1]"
+                                        name="ots[<%= i + 1 %>][morning][ot]"
+                                        data-day="<%= i + 1 %>" data-shift="morning" data-category="ot1">
+                                    <label class="form-check-label small"
+                                        for="ots[<%= i + 1 %>][morning][ot]">עד 19</label>
+                                </div>
+                            </div>
+
+                            <div class="col p-2 d-flex justify-content-center align-items-center">
+                                <!-- for maintaining structure  -->
+                            </div>
+
+                            <div class="col d-flex flex-wrap justify-content-center align-items-start">
+
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input ot-toggle"
+                                        id="ots[<%= i + 1 %>][night][ot1]"
+                                        name="ots[<%= i + 1 %>][night][ot][1]"
+                                        data-day="<%= i + 1 %>" data-shift="night" data-category="ot1">
+                                    <label class="form-check-label small"
+                                        for="ots[<%= i + 1 %>][night][ot][1]">מ-19</label>
+                                </div>
+
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input ot-toggle"
+                                        id="ots[<%= i + 1 %>][night][ot2]"
+                                        name="ots[<%= i + 1 %>][night][ot][2]"
+                                        data-day="<%= i + 1 %>" data-shift="night" data-category="ot2">
+                                    <label class="form-check-label small"
+                                        for="ots[<%= i + 1 %>][night][ot][2]">עד 11</label>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    <% } %>
+                </div>
+                <div class="container mb-5">
+                    <label class="form-label" for="comment">
+                        <h5>הערות מיוחדות</h5>
+                    </label>
+                    <input class="form-control" type="text" name="comment" id="comment" maxlength="500"    >
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary mt-3" id="submitBtn">הגשת הסידור</button>
+                </div>
+            </fieldset>
         </form>
         </div>
 
@@ -150,8 +157,9 @@
     <script>
         const currentYearData = '<%- currentYear %>';
         const currentWeekData = '<%- currentWeek %>';
+        const isLiveData =      '<%- isLive %>';
     </script>
-    <script src="../../scripts/formWorker.js"></script>
+    <script defer src="../../scripts/formWorker.js"></script> <!-- TODO why is it first? will the defer matter? -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

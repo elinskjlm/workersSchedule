@@ -6,12 +6,12 @@ module.exports.getAllUsers = async (req, res) => {
 }
 
 module.exports.createUser = async (req, res) => {
-    // try { // TODO
-        const { name, username, password, roll } = req.body;
+    try {
+        const { name, username, password, role } = req.body;
         const user = new User({
             name,
             username,
-            roll: roll || 'inspector',
+            role: role || 'inspector',
             created: new Date(),
             lastSeen: null,
             lastModified: null,
@@ -25,12 +25,12 @@ module.exports.createUser = async (req, res) => {
                 data: req.user,
             });
         })
-    // } catch (e) {
-    //     res.send({
-    //         success: false,
-    //         msgHeb: e.message, // TODO Hebrew!!
-    //     });
-    // }
+    } catch (e) {
+        res.send({
+            success: false,
+            msgHeb: e.message, // TODO Hebrew!!
+        });
+    }
 }
 
 module.exports.readUser = async (req, res) => {
@@ -42,7 +42,7 @@ module.exports.readUser = async (req, res) => {
 module.exports.updateUser = async (req, res) => {
     // TODO check if different rather than check for existance
     const { id } = req.params
-    const { newName, oldPassword, newPassword, newRoll } = req.body;
+    const { newName, oldPassword, newPassword, newRole } = req.body;
     const user = await User.findById(id)
     user.lastModified = new Date();
     const changes = [];
@@ -50,12 +50,12 @@ module.exports.updateUser = async (req, res) => {
         user.name = newName;
         changes.push('שם');
     }
-    if (newRoll != user.roll) {
-        user.roll = newRoll;
+    if (newRole != user.role) {
+        user.role = newRole;
         changes.push('תפקיד');
     }
     // newName ? user.name = newName : '';
-    // newRoll ? user.roll = newRoll : '';
+    // newRole ? user.role = newRole : '';
     if (oldPassword && newPassword) {
         const passwordUpdated = await user.changePassword(oldPassword, newPassword);
         if (passwordUpdated) {

@@ -1,10 +1,11 @@
 const Schedule = require('../../../models/schedule');
+const config =   require('../../../config/default');
 
 module.exports.getNames = async (req, res) => {
-    const year = req.query.year;
-    const weekNum = req.query.weeknum;
-    if (!year || !weekNum) return res.sendStatus(400) // bad request
-    const availableNames = await Schedule.find({ weekNum, year }, { 'name': 1, '_id': 1 })
+    const year =    req.query.year || '';
+    const weekNum = req.query.weeknum || '';
+    const params = (year && weekNum) ? { weekNum, year } : {};
+    const availableNames = await Schedule.find(params, { 'name': 1, '_id': 1 })
     res.json(availableNames)
 }
 
@@ -31,23 +32,39 @@ module.exports.getAllScheds = async (req, res) => {
         case 'off': params.isOpen = false; break;
         default: break;
     }
-    // switch (req.query.onlyPermanent) { /* For future use */
-    //     case 'on':  params.isPermanent = true;  break;
-    //     case 'off': params.isPermanent = false; break;
-    //     default: break;
-    // }
+    switch (req.query.onlyProper) {
+        case 'on':  params.isProper = true;  break;
+        case 'off': params.isProper = false; break;
+        default: break;
+    }
+    switch (req.query.onlySeen) {
+        case 'on':  params.isSeen = true;  break;
+        case 'off': params.isSeen = false; break;
+        default: break;
+    }
     if (req.query.weekNum != 'undefined' && req.query.year != 'undefined') {
         params.weekNum = req.query.weekNum;
         params.year = req.query.year;
     }
+    req.query.name ? params.name = req.query.name : '';
     const allSchedules = await Schedule.find(params);
     res.json(allSchedules)
 }
 
 module.exports.createSchdule = async (req, res) => {
-    const newSchedule = new Schedule(req.body);
-    await newSchedule.save();
-    return res.json({ redirect: '/thankyou' });
+    if (config.formLive) {
+        const newSchedule = new Schedule(req.body);
+        await newSchedule.save();
+        return res.json({
+            success: true,
+            redirect: '/thankyou'
+        });
+    } else {
+        return res.json({
+            success: false,
+            msgHeb: 'הטופס כבוי כרגע.'
+        });
+    }
 }
 
 module.exports.getScheduleById = async (req, res) => {
@@ -57,12 +74,13 @@ module.exports.getScheduleById = async (req, res) => {
 }
 
 module.exports.toggleSchedule = async (req, res) => {
-    // TODO access: organizer only
-    // TODO add validation!!
     const { id } = req.params;
-    if (['on', 'off'].includes(req.body.open)) {
-        const isOpen = req.body.open === 'on' ? true : false;
-        const schedule = await Schedule.findByIdAndUpdate(id, { isOpen }, { runValidators: true, new: true });
+    const params = {};
+    ['on', 'off'].includes(req.body.open) ? params.isOpen = req.body.open === 'on' : '';
+    ['on', 'off'].includes(req.body.seen) ? params.isSeen = req.body.seen === 'on' : '';
+    ['on', 'off'].includes(req.body.proper) ? params.isProper = req.body.proper === 'on' : '';
+    if (params) {
+        const schedule = await Schedule.findByIdAndUpdate(id, params, { runValidators: true, new: true });
         return res.json(schedule)
     } else {
         return res.json({ error: 'only "on" or "off"' }) // TODO

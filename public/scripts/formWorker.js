@@ -5,23 +5,24 @@ const allCheckboxes =   document.querySelectorAll('.ot-toggle, .shift-toggle');
 const allOtBoxes =      document.querySelectorAll('.ot-toggle');
 const allShiftBoxes =   document.querySelectorAll('.shift-toggle');
 const form =            document.querySelector('form');
+const fieldset =        document.querySelector('fieldset');
 const fullNameElement = document.getElementById('fullName');
 const commentElement =  document.getElementById('comment');
 const submitBtn =       document.getElementById("submitBtn");
 
 const regexName = /^[\u0590-\u05FF\s'"\`\-().\[\]]{2,}$/;
-const weekNum = +currentWeekData + 1; // TODO last week of the year
-const year = currentYearData;
+// const isLive =    isLiveData;
+const isLive =    isLiveData === 'true';
+const weekNum =   +currentWeekData + 1; // TODO last week of the year
+const year =      currentYearData;
 
 const scheduleWrapper = {
   timeSubmitted: "",
   weekNum,
   year,
   name: "",
-  schedule: {
-  },
+  schedule: {},
   comment: "",
-  status: 0
 }
 
 for (let day = 1; day <= 7; day++) {
@@ -46,6 +47,7 @@ function onPageLoad() {
   document.getElementById('weeknum').innerHTML = weekNum;
   document.getElementById('start-date').innerHTML = startDate;
   document.getElementById('end-date').innerHTML = endDate;
+  fieldset.disabled = !isLive;
 }
 onPageLoad();
 
@@ -112,42 +114,48 @@ const checkName = () => {
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  scheduleWrapper.timeSubmitted = new Date().toLocaleString();
-  //weekNum and year are already populated
-  if (checkName()) {
-    scheduleWrapper.name = fullNameElement.value;
-  } else {
-    fullNameElement.scrollIntoView();
-    e.stopPropagation();
-    return
-  }
-  scheduleWrapper.comment = commentElement.value;
-  const asStr = JSON.stringify(scheduleWrapper)
-  try {
-    const response = await fetch('/api/v1/schedules', {
-      method: 'POST',
-      body: asStr,
-      headers: {
-        'Content-type': 'application/json',
-      },
-    })
-    if (response.ok) {
-      const { redirect } = await response.json();
-      window.location.replace(redirect || '/thankyou');
+  if (isLive) {
+    scheduleWrapper.timeSubmitted = new Date().toLocaleString();
+    //weekNum and year are already populated
+    if (checkName()) {
+      scheduleWrapper.name = fullNameElement.value;
     } else {
-      console.error('Error fetching');
+      fullNameElement.scrollIntoView();
+      e.stopPropagation();
+      return
     }
-  } catch (error) {
-    console.error('Error fetching', error);
+    scheduleWrapper.comment = commentElement.value;
+    const asStr = JSON.stringify(scheduleWrapper)
+    try {
+      const response = await fetch('/api/v1/schedules', {
+        method: 'POST',
+        body: asStr,
+        headers: {
+          'Content-type': 'application/json',
+        },
+      })
+      const answer = await response.json();
+      if (answer.success) {
+        window.location.replace(answer.redirect || '/thankyou');
+      } else {
+        console.error(answer.msgHeb);
+      }
+    } catch (error) {
+      console.error('Error fetching', error);
+    }
   }
 })
 
-const recurStringify = function (obj) {
-  for (let el in obj) {
-      if (typeof (obj[el]) == 'object' && obj[el] !== null) {
-          recurStringify(obj[el])
-          obj[el] = JSON.stringify(obj[el])
-      }
-  }
-  return JSON.stringify(obj)
-}
+// const recurStringify = function (obj) {
+//   for (let el in obj) {
+//       if (typeof (obj[el]) == 'object' && obj[el] !== null) {
+//           recurStringify(obj[el])
+//           obj[el] = JSON.stringify(obj[el])
+//       }
+//   }
+//   return JSON.stringify(obj)
+// }
+
+// allLiveDepend.forEach(el => {
+//   el.classList.add('disabled')
+// })

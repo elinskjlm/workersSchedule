@@ -5,14 +5,11 @@ const session =         require('express-session');
 const ejsMate =         require('ejs-mate');
 const passport =        require('passport');
 const LocalStrategy =   require('passport-local');
-// const { validateSchedule, validateForm } = require('./middleware');
-// const formsView =   require('./controllers/views/forms')
-// const schedsView =  require('./controllers/views/schedules')
-// const formsAPI =    require('./controllers/api/v1/forms')
-// const schedsAPI =   require('./controllers/api/v1/schedules')
+const mongoSanitize =   require('express-mongo-sanitize');
+const helmet =          require('helmet');
 const apiRoutes =       require('./routes/api');
 const viewsRoutes =     require('./routes/views');
-const User =            require('./models/user')
+const User =            require('./models/user');
 
 const dbUrl = 'mongodb://localhost:27017/sidur';
 const app = express();
@@ -45,6 +42,45 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 
+app.use(mongoSanitize());
+// app.use(mongoSanitize({
+//     replaceWith: '_',
+// }));
+
+const scriptSrcUrls = [
+    "https://cdn.jsdelivr.net/",
+    "https://code.jquery.com/",
+];
+
+const styleSrcUrls = [
+    "https://cdn.jsdelivr.net/",
+];
+
+const connectSrcUrls = [];
+
+const fontSrcUrls = [];
+
+app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc:   [],
+          connectSrc:   ["'self'", ...connectSrcUrls],
+          fontSrc:      ["'self'", ...fontSrcUrls],
+          scriptSrc:    ["'self'", "'unsafe-inline'", ...scriptSrcUrls],
+          styleSrc:     ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+          workerSrc:    ["'self'", "blob:"],
+          objectSrc:    [],
+          imgSrc:       [
+            "'self'",
+            "blob:",
+            "data:",
+          ]
+        },
+      },
+    })
+  );
+
 app.use(passport.initialize());
 app.use(passport.session()); // Must be after `app.use(session(sessionConfig))`
 passport.use(new LocalStrategy(User.authenticate()));
@@ -55,7 +91,7 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     // TEMP
     console.log('┌───────────────────────────');
-    console.log('│', req.user?.id);
+    console.log('│', req.user?.username);
     console.log('│', req.method, req.originalUrl);
     console.log('└───────────────────────────');
     next();
@@ -69,6 +105,13 @@ app.get('/thankYou', (req, res) => res.render('thankyou'))
 app.use('/api/v1', apiRoutes)
 
 // app.all('*', (req, res) => res.redirect('/forms/apply'))
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = 'Unkown Error';
+  console.log(`⚠️ ${err}`);
+  res.status(statusCode).render(`error`, { err });
+})
 
 app.listen(8080, () => {
     console.log('listeningggg');

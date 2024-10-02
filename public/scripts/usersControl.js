@@ -5,33 +5,31 @@ navUser.classList.add('active');
 const btnModalCreate = document.getElementById('btnModalCreate');
 const newUserModal = document.getElementById('newUserModal')
 const editUserModal = document.getElementById('editUserModal')
-
-// const modalEditUser = '';
-// const modalNewUser = '';
-// const modalDeleteUser = '';
-// const modalSuccess = '';
+const temporarValuesNewUser = {
+    tempName: '',
+    tempUsername: '',
+    tempUserRole: '',
+}
 
 
 btnModalCreate.addEventListener('click', async (e) => {
-    const newName =     document.getElementById('newName');
-    const newUsername = document.getElementById('newUsername');
-    const newUserRoll = document.getElementById('newUserRoll');
+    const newName =         document.getElementById('newName');
+    const newUsername =     document.getElementById('newUsername');
+    const newUserRole =     document.getElementById('newUserRole');
     const newUserPassword = document.getElementById('newUserPassword');
-    const result = await createUser(newName.value, newUsername.value, newUserPassword.value, newUserRoll.value)
+    const result = await createUser(newName.value, newUsername.value, newUserPassword.value, newUserRole.value)
     const answer = await result.json()
+    loadUserssTable();
     if (answer.success) {
-        console.log('open modal success')
-        loadUserssTable();
-        const successUserModal = new bootstrap.Modal('#successUserModal');
-        const successH1 = document.getElementById('successUserModalH1');
-        const successMessege = document.getElementById('successUserModalMessege');
-        successH1.innerHTML = "המשתמש נוצר בהצלחה";
-        successMessege.innerHTML = answer.msgHeb;
-        successUserModal.show();
+        showToast('הפעולה הצליחה', `המשתמש נוצר בהצלחה. הנך מחובר כעת כ-${newUsername.value}`) // TODO rely on username from DB?
+        document.getElementById('nav-username').innerHTML = newUsername.value
     } else {
-        console.log('open modal fail + reason')
-        const successUserModal = new bootstrap.Modal('#successUserModal')
-        successUserModal.show();
+        showToast('הפעולה נכשלה', answer.msgHeb)
+        const newUserModal =     new bootstrap.Modal('#newUserModal');
+        temporarValuesNewUser.tempName =        newName.value;
+        temporarValuesNewUser.tempUsername =    newUsername.value;
+        temporarValuesNewUser.tempUserRole =    newUserRole.value;
+        newUserModal.show();
     }
     console.log(answer)
 })
@@ -42,7 +40,7 @@ document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
 
 loadUserssTable()
 
-async function createUser(name, username, password, roll) {
+async function createUser(name, username, password, role) {
     return await fetch('/api/v1/users', {
         method: "POST",
         headers: {
@@ -52,7 +50,7 @@ async function createUser(name, username, password, roll) {
             name,
             username,
             password,
-            roll,
+            role,
         }),
     })
 }
@@ -153,7 +151,7 @@ async function loadUserssTable() {
             <td>${user.shortId}</td>
             <td>${user.name}</td>
             <td>${user.username}</td>
-            <td>${user.roll}</td>
+            <td>${user.role}</td>
             <td>${user.createdDate}</td>
             <td></td>
             <td id="actions[${i}]"></td>
@@ -167,7 +165,7 @@ function beforeEditing(id) {
     // const toEditName =      document.getElementById('toEditName');
     // const oldPassword =     document.getElementById('oldPassword');
     // const toEditPassword =  document.getElementById('toEditPassword');
-    // const toEditUserRoll =  document.getElementById('toEditUserRoll');
+    // const toEditUserRole =  document.getElementById('toEditUserRole');
     const btnModalEdit = document.getElementById('btnModalEdit');
     btnModalEdit.addEventListener('click', () => {
         editUser(id)
@@ -177,12 +175,11 @@ function beforeEditing(id) {
 
 async function editUser(id) {
     const change = {
-        newName: document.getElementById('toEditName').value || undefined,
+        newName:     document.getElementById('toEditName').value || undefined,
         oldPassword: document.getElementById('oldPassword').value || undefined,
         newPassword: document.getElementById('toEditPassword').value || undefined,
-        newRoll: document.getElementById('toEditUserRoll').value || undefined,
+        newRole:     document.getElementById('toEditUserRole').value || undefined,
     }
-    console.log(change)
     const res = await fetch(`/api/v1/users/${id}?`, {
         method: "PATCH",
         headers: {
@@ -192,18 +189,11 @@ async function editUser(id) {
     })
     const answer = await res.json();
     if (answer.success) {
-        console.log('open modal success')
         loadUserssTable();
-        const successUserModal = new bootstrap.Modal('#successUserModal');
-        const successH1 = document.getElementById('successUserModalH1');
-        const successMessege = document.getElementById('successUserModalMessege');
-        successH1.innerHTML = "המשתמש נערך בהצלחה";
-        successMessege.innerHTML = answer.msgHeb;
-        successUserModal.show();
+        showToast('הפעולה הצליחה', 'המשתמש נערך בהצלחה')
     } else {
-        console.log('open modal fail + reason')
-        const successUserModal = new bootstrap.Modal('#successUserModal')
-        successUserModal.show();
+        showToast('הפעולה נכשלה', `המשתמש לא נערך.<br/>${answer.msgHeb}`)
+        // TODO bring back the modal with the draft 
     }
     return res
 }
@@ -221,18 +211,10 @@ async function deleteUser(id) {
     })
     const answer = await res.json();
     if (answer.success) {
-        console.log('open modal success')
         loadUserssTable();
-        const successUserModal = new bootstrap.Modal('#successUserModal');
-        const successH1 = document.getElementById('successUserModalH1');
-        const successMessege = document.getElementById('successUserModalMessege');
-        successH1.innerHTML = "המשתמש נמחק בהצלחה";
-        successMessege.innerHTML = answer.msgHeb;
-        successUserModal.show();
+        showToast('הפעולה הצליחה', 'המשתמש נמחק בהצלחה')
     } else {
-        // console.log('open modal fail + reason')
-        // const successUserModal = new bootstrap.Modal('#successUserModal')
-        // successUserModal.show();
+        showToast('הפעולה נכשלה', `המשתמש לא נמחק.<br/>${answer.msgHeb}`)
     }
     return res
 }
@@ -240,23 +222,26 @@ async function deleteUser(id) {
 function resetModalNewUser() {
     const newName =         document.getElementById('newName');
     const newUsername =     document.getElementById('newUsername');
-    const newUserRoll =     document.getElementById('newUserRoll');
+    const newUserRole =     document.getElementById('newUserRole');
     const newUserPassword = document.getElementById('newUserPassword');
-    newName.value = '';
-    newUsername.value = '';
-    newUserPassword.value = '';
-    newUserRoll.value = 'inspector'; // TODO it's too manual
+    newName.value =         temporarValuesNewUser.tempName || '';
+    newUsername.value =     temporarValuesNewUser.tempUsername || '';
+    newUserPassword.value = ''; // Always
+    newUserRole.value =     temporarValuesNewUser.tempUserRole || 'inspector'; // TODO it's too manual
+    for (let key in temporarValuesNewUser){
+        temporarValuesNewUser[key] = '';
+    }
 }
 
 function resetModaleditUser() {
     const toEditName =     document.getElementById('toEditName');
     const oldPassword =    document.getElementById('oldPassword');
     const toEditPassword = document.getElementById('toEditPassword');
-    const toEditUserRoll = document.getElementById('toEditUserRoll');
+    const toEditUserRole = document.getElementById('toEditUserRole');
     toEditName.value = '';
     oldPassword.value = '';
     toEditPassword.value = '';
-    toEditUserRoll.value = 'inspector'; // TODO it's too manual
+    toEditUserRole.value = 'inspector'; // TODO it's too manual
 }
 
 

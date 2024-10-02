@@ -1,10 +1,11 @@
 const express =     require('express');
 const passport =    require('passport');
-const { validateSchedule, validateForm, isLoggedIn, logout } = require('../middleware');
+const { validateSchedule, validateForm, validateUser, isLoggedIn, logout } = require('../middleware');
 const catchAsync =  require('../utils/catchAsync')
 const formsAPI =    require('../controllers/api/v1/forms')
 const schedsAPI =   require('../controllers/api/v1/schedules')
 const usersAPI =    require('../controllers/api/v1/users')
+const configAPI =   require('../controllers/api/v1/config')
 const router =      express.Router();
 
 router.route('/forms/:id')
@@ -17,7 +18,7 @@ router.route('/forms')
 
 router.route('/schedules')
     .get(isLoggedIn, /*catchAsync(*/schedsAPI.getAllScheds/*)*/)
-    .post(isLoggedIn, /*catchAsync(*/validateSchedule, schedsAPI.createSchdule/*)*/);
+    .post(/*catchAsync(*/validateSchedule, schedsAPI.createSchdule/*)*/);
 
 router.get('/schedules/getNames', isLoggedIn, catchAsync(schedsAPI.getNames));
 // router.get('/schedules/getWeeks', catchAsync(schedsAPI.getWeeks));
@@ -30,14 +31,18 @@ router.route('/schedules/:id')
 
 router.route('/users')
     .get(isLoggedIn,    catchAsync(usersAPI.getAllUsers))
-    .post(isLoggedIn,   catchAsync(usersAPI.createUser));
+    .post(isLoggedIn, validateUser, catchAsync(usersAPI.createUser));
 
 router.post('/users/login', logout, passport.authenticate('local'), usersAPI.loginUser);
 router.get('/users/logout',     catchAsync(usersAPI.logoutUser));
 
 router.route('/users/:id')
     .get(isLoggedIn,    catchAsync(usersAPI.readUser))
-    .patch(isLoggedIn,  catchAsync(usersAPI.updateUser))
-    .delete(isLoggedIn, catchAsync(usersAPI.deleteUser))
+    .patch(isLoggedIn, validateUser, catchAsync(usersAPI.updateUser))
+    .delete(isLoggedIn, catchAsync(usersAPI.deleteUser));
+
+router.route('/config')
+    .get(isLoggedIn, configAPI.getLiveForm)
+    .put(isLoggedIn, configAPI.toggleLiveForm)
 
 module.exports = router;
