@@ -1,4 +1,6 @@
-const { scheduleSchema, formSchema, userSchema } = require('./schemas')
+const { scheduleSchema, formSchema, userSchema } = require('./schemas');
+const ExpressError =    require('./utils/ExpressError');
+const Code =            require('./models/code')
 
 module.exports.validateSchedule = (req, res, next) => {
     const { error } = scheduleSchema.validate(req.body);
@@ -56,4 +58,14 @@ module.exports.logout = (req, res, next) => {
         if (err) return next(err); // TODO ???
     });
     next();
+}
+
+module.exports.checkCode = async (req, res, next) => {
+    const { code } = req.query;
+    if (code) {
+        // TODO should a middleware read directly from the DB? Or should it be in a controller or something?
+        const result = await Code.findOne({ accessCode: code });
+        if (result) return next();
+    }
+    next(new ExpressError('Page not found, or incorrect code', 404));
 }

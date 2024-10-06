@@ -1,11 +1,11 @@
 const express =     require('express');
 const passport =    require('passport');
 const { validateSchedule, validateForm, validateUser, isLoggedIn, logout } = require('../middleware');
-const catchAsync =  require('../utils/catchAsync')
-const formsAPI =    require('../controllers/api/v1/forms')
-const schedsAPI =   require('../controllers/api/v1/schedules')
-const usersAPI =    require('../controllers/api/v1/users')
-const configAPI =   require('../controllers/api/v1/config')
+const catchAsync =  require('../utils/catchAsync');
+const formsAPI =    require('../controllers/api/v1/forms');
+const schedsAPI =   require('../controllers/api/v1/schedules');
+const usersAPI =    require('../controllers/api/v1/users');
+const configAPI =   require('../controllers/api/v1/config');
 const router =      express.Router();
 
 router.route('/forms/:id')
@@ -41,8 +41,15 @@ router.route('/users/:id')
     .patch(isLoggedIn, validateUser, catchAsync(usersAPI.updateUser))
     .delete(isLoggedIn, catchAsync(usersAPI.deleteUser));
 
-router.route('/config')
+router.route('/config/liveForm')
     .get(isLoggedIn, configAPI.getLiveForm)
-    .put(isLoggedIn, configAPI.toggleLiveForm)
+    .put(isLoggedIn, configAPI.toggleLiveForm);
+
+router.route('/config/codes')
+    .get(isLoggedIn,    configAPI.getCodes)
+    .post(isLoggedIn,   configAPI.createCode);
+
+router.route('/config/codes/:code')
+    .delete(isLoggedIn, configAPI.deleteCode);
 
 module.exports = router;

@@ -10,7 +10,7 @@ navLogoutLink.addEventListener('click', async () => {
 })
 
 async function getState() {
-    const response = await fetch('http://localhost:8080/api/v1/config')
+    const response = await fetch('/api/v1/config/liveForm')
     const state = await response.json()
     return state
 }
