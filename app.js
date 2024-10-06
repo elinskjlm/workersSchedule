@@ -10,6 +10,7 @@ const helmet =          require('helmet');
 const apiRoutes =       require('./routes/api');
 const viewsRoutes =     require('./routes/views');
 const User =            require('./models/user');
+const ExpressError =    require('./utils/ExpressError');
 
 const dbUrl = 'mongodb://localhost:27017/sidur';
 const app = express();
@@ -104,7 +105,9 @@ app.get('/thankYou', (req, res) => res.render('thankyou'))
 
 app.use('/api/v1', apiRoutes)
 
-// app.all('*', (req, res) => res.redirect('/forms/apply'))
+app.all('*' , (req, res, next) => {
+  next(new ExpressError(`Page not found: ${req.url}`, 404));
+})
 
 app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
