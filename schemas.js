@@ -23,7 +23,7 @@ const extention = (joi) => ({
         },
         hebAlphanum: {
             validate(value, helpers) {
-                if (/^[א-תa-zA-Z0-9]+$/.test(value)) {
+                if (/^[א-תa-zA-Z0-9\s]+$/.test(value)) {
                     return value;
                 }
                 return helpers.error('string.hebAlphanum');
