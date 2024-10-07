@@ -30,8 +30,7 @@ module.exports.validateUser = (req, res, next) => {
         return res.send({
             success: false,
             msg,
-            // msgHeb: `שגיאה: ${msg}`,
-            msgHeb: 'Note: ' +  msg,
+            msgHeb: `שגיאה: ${msg}`,
         });
     } else {
         next();
@@ -42,7 +41,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         console.log('👎👎👎👎👎') 
         if (req.baseUrl.startsWith('/api')) {
-            return res.send({ success: false, reason: 'Not allowed or not logged in.' })
+            return res.send({ success: false, reason: 'לא מורשה, או לא מחובר' })
         } else {
             return res.redirect('/users/login')
         }
@@ -67,5 +66,5 @@ module.exports.checkCode = async (req, res, next) => {
         const result = await Code.findOne({ accessCode: code });
         if (result) return next();
     }
-    next(new ExpressError('Page not found, or incorrect code', 404));
+    next(new ExpressError('העמוד לא נמצא, או שהקוד לא נכון', 404));
 }

@@ -1,11 +1,14 @@
 const BaseJoi =  require('joi');
 const sanitizeHTML = require('sanitize-html');
+const { hebMessages } = require('./utils/joiMessages');
 
 const extention = (joi) => ({
     type: 'string',
     base: joi.string(),
     messages: {
-        'string.escapeHTNL': '{{#label}} must not include HTML'
+        'string.escapeHTML':    '{{#label}} לא יכול להכיל HTML',
+        'string.hebAlphanum':   '{{#label}} יכול להכיל רק אותיות בעברית או אנגלית, ומספרים',
+        'string.password':      '{{#label}} חייב להיות באורך מינימלי של 8 תווים, וחייב לכלול שילוב של אותיות גדולות וקטנות באנגלית, ומספרים',
     },
     rules: {
         escapeHTML: {
@@ -17,7 +20,23 @@ const extention = (joi) => ({
                 if (clean !== value) return helpers.error('string.escapeHTML', { value });
                 return clean
             }
-        }
+        },
+        hebAlphanum: {
+            validate(value, helpers) {
+                if (/^[א-תa-zA-Z0-9]+$/.test(value)) {
+                    return value;
+                }
+                return helpers.error('string.hebAlphanum');
+            }
+        },
+        password: {
+            validate(value, helpers) {
+                if (/^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$/.test(value)) {
+                    return value;
+                }
+                return helpers.error('string.password');
+            }
+        },
     }
 })
 
@@ -47,9 +66,9 @@ const daySchema = Joi.object({
 
 module.exports.scheduleSchema = Joi.object({
     timeSubmitted:  Joi.date().required().default(Date.now),
-    year:           Joi.number().required().min(2020).max(2120),
-    weekNum:        Joi.number().required().min(1).max(53),
-    name:           Joi.string().required().min(2).max(30),
+    year:           Joi.number().required().min(2020).max(2120).messages(hebMessages),
+    weekNum:        Joi.number().required().min(1).max(53).messages(hebMessages),
+    name:           Joi.string().escapeHTML().hebAlphanum().required().min(2).max(30).messages(hebMessages),
     schedule:       Joi.object({
         day1: daySchema,
         day2: daySchema,
@@ -59,7 +78,7 @@ module.exports.scheduleSchema = Joi.object({
         day6: daySchema,
         day7: daySchema,
     }),
-    comment:        Joi.string().allow(null, '').max(250),
+    comment:        Joi.string().escapeHTML().hebAlphanum().messages(hebMessages).allow(null, '').max(250),
     isProper:       Joi.boolean().default(true),
     isSeen:         Joi.boolean().default(false),
     isOpen:         Joi.boolean().default(true),
@@ -73,10 +92,9 @@ module.exports.formSchema = Joi.object({
 }).required()
 
 module.exports.userSchema = Joi.object({
-    name:           Joi.string().alphanum().required().min(2).max(30),
-    username:       Joi.string().alphanum().required().min(3).max(10),
-    password:       Joi.string()
-                       .pattern(new RegExp('^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$')).required(),
+    name:           Joi.string().hebAlphanum().required().min(2).max(30).messages(hebMessages).escapeHTML(),
+    username:       Joi.string().hebAlphanum().required().min(3).max(10).messages(hebMessages).escapeHTML(),
+    password:       Joi.string().password().required().messages(hebMessages).escapeHTML(),
     role:           Joi.string().valid('inspector', 'dev', 'organizer').required().default('inspector'),
     created:        Joi.date().default(Date.now), // TODO ??
     lastSeen:       Joi.date().default(Date.now),
