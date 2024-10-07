@@ -12,11 +12,11 @@ const submitBtn =       document.getElementById("submitBtn");
 const submitSpan =      document.getElementById("submitSpan");
 
 const nameFrame = {
-  regex: /^[\u0590-\u05FF\s'"\`\-().\[\]]{2,}$/,
+  regex: /^[\u0590-\u05FF\s.,;`'"-()\[\]]{2,}$/,
   message: 'שם חייב להיות לפחות 2 אותיות, רק בעברית',
 }
 const commentFrame = {
-  regex: /^[\u0590-\u05FF\s.,;!?()\[\]:"'-]*$/,
+  regex: /^[\u0590-\u05FF\s.,;`'"-()\[\]]*$/,
   message: 'תגובה צריכה להיות רק בעברית',
 }
 // const isLive =    isLiveData;
@@ -133,7 +133,7 @@ form.addEventListener('submit', async (e) => {
   if (isLive) {
     scheduleWrapper.timeSubmitted = new Date().toLocaleString();
     //weekNum and year are already populated
-    if (checkName()) {
+    if (checkField(fullNameElement, nameFrame)) {
       scheduleWrapper.name = fullNameElement.value;
     } else {
       fullNameElement.scrollIntoView();
@@ -154,9 +154,10 @@ form.addEventListener('submit', async (e) => {
       if (answer.success) {
         window.location.replace(answer.redirect || '/thankyou');
       } else {
-        console.error(answer.msgHeb);
+        showToast('שגיאה', answer.msgHeb)
       }
     } catch (error) {
+      showToast('שגיאה', error)
       console.error('Error fetching', error);
     }
   }
@@ -169,11 +170,9 @@ function setPopover() {
     submitSpan.dataset.bsToggle = 'popover'
     submitSpan.dataset.bsContent = 'הטופס נעול להגשה'
   } else if (submitBtn.classList.contains('disabled')) {
-    console.log('should leave popover')
     submitSpan.dataset.bsToggle = 'popover'
     submitSpan.dataset.bsContent = 'וודא שאין בעיה בשדות "שם" ו"הערות מיוחדות"'
   } else {
-    console.log('should disable popover')
     popover.disable()
 
   }
