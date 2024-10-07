@@ -6,7 +6,12 @@ module.exports.validateSchedule = (req, res, next) => {
     const { error } = scheduleSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',\t');
-        throw new Error(msg, 400)
+        // throw new Error(msg, 400)
+        return res.send({
+            success: false,
+            msg,
+            msgHeb: `שגיאה: ${msg}`,
+        });
     } else {
         next();
     }
@@ -16,7 +21,12 @@ module.exports.validateForm = (req, res, next) => {
     const { error } = formSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',\t');
-        throw new Error(msg, 400)
+        // throw new Error(msg, 400)
+        return res.send({
+            success: false,
+            msg,
+            msgHeb: `שגיאה: ${msg}`,
+        });
     } else {
         next();
     }
