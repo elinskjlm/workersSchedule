@@ -198,7 +198,6 @@ function loadNameList(availableNames) {
 async function refreshNames() {
     namesField.value = '';
     const availableNames = await getAvailableNames();
-    console.dir(availableNames)
     loadNameList(availableNames);
 }
 

@@ -157,8 +157,7 @@ form.addEventListener('submit', async (e) => {
         showToast('שגיאה', answer.msgHeb)
       }
     } catch (error) {
-      showToast('שגיאה', error)
-      console.error('Error fetching', error);
+      showToast('שגיאה', error.message)
     }
   }
 })

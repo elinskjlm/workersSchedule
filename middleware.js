@@ -49,14 +49,12 @@ module.exports.validateUser = (req, res, next) => {
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
-        console.log('👎👎👎👎👎') 
         if (req.baseUrl.startsWith('/api')) {
             return res.send({ success: false, reason: 'לא מורשה, או לא מחובר' })
         } else {
             return res.redirect('/users/login')
         }
     } else {
-        console.log('👍👍👍👍👍')
         next();
     }
 }

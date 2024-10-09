@@ -61,7 +61,6 @@ module.exports.updateUser = async (req, res) => {
         if (passwordUpdated) {
             changes.push('סיסמה')
         } else {
-            console.log('nono')
             return res.send({
                 success: false,
                 msgHeb: `סיסמה ישנה לא נכונה. השינויים לא נשמרו.`
@@ -69,7 +68,6 @@ module.exports.updateUser = async (req, res) => {
         }
     }
     user.save();
-    console.log(`OK ${changes}.`)
     return res.send({
         success: true,
         msgHeb: `השינויים נשמרו בהצלחה בשדות: ${changes.join(', ')}.`, //TODO

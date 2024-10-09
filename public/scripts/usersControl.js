@@ -31,7 +31,6 @@ btnModalCreate.addEventListener('click', async (e) => {
         temporarValuesNewUser.tempUserRole =    newUserRole.value;
         newUserModal.show();
     }
-    console.log(answer)
 })
 
 document.querySelectorAll('input[name="radio-filter"]').forEach(btn => {
