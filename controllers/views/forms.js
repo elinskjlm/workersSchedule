@@ -1,21 +1,20 @@
-const Form =                require('../../models/form');
-const { dateToWeeknum } =   require('../../utils/weekDate');
-const config =              require('../../config/default');
+const Form =   require('../../models/form');
+const config = require('../../config/default');
+const { nextWeeknum, nextWeekYear } = require('../../utils/weekDate');
 
 module.exports.renderWorkerForm = async (req, res) => {
     const isLive =  config.formLive;
     const id =      req.params.id;
     const form =    await Form.findById(id)
-    let currentYear, currentWeek;
+    let formYear, formWeek;
     if (id && form) {
-        currentYear = form.year;
-        currentWeek = form.weekNum - 1; // TODO
+        formYear = form.year;
+        formWeek = form.weekNum;
     } else {
-        const today = new Date();
-        currentYear = today.getFullYear();
-        currentWeek = dateToWeeknum(today);
+        formYear = nextWeekYear;
+        formWeek = nextWeeknum;
     }
-    res.render('forms/formWorker', { isLive, currentYear, currentWeek })
+    res.render('forms/formWorker', { isLive, formYear, formWeek })
 }
 
 module.exports.renderFormsControl = (req, res) => {

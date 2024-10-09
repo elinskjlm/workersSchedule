@@ -21,8 +21,8 @@ const commentFrame = {
 }
 // const isLive =    isLiveData;
 const isLive =    isLiveData === 'true';
-const weekNum =   +currentWeekData + 1; // TODO last week of the year
-const year =      currentYearData;
+const weekNum =   formWeekData;
+const year =      formYearData;
 
 const scheduleWrapper = {
   timeSubmitted: "",
