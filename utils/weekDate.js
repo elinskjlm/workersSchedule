@@ -1,7 +1,4 @@
-
-
-
-module.exports.weeknumToDates = function (year, weekNum) {
+function weeknumToDates (year, weekNum) {
     // Create a Date object representing the first day of the year.
     const d = new Date(year, 0, 1);
     // Get the day of the week (0 for Sunday, 6 for Saturday).
@@ -20,11 +17,23 @@ module.exports.weeknumToDates = function (year, weekNum) {
     };
 }
 
-
-module.exports.dateToWeeknum = function (date) {
+function dateToWeeknum (date) {
     const givenDate = new Date(date);
     const janFirst = new Date(givenDate.getFullYear(), 0, 1);
     const daysSinceJanFirst = Math.floor((givenDate - janFirst) / (24 * 60 * 60 * 1000));
     let weekNumber = Math.ceil((daysSinceJanFirst + janFirst.getDay() + 1) / 7);
     return weekNumber;
+}
+
+module.exports = {
+    currentDate: new Date(),
+    get currentWeekday()    { return this.currentDate.getDay() },
+    get currentFullYear()   { return this.currentDate.getFullYear() },
+    get currentWeeknum()    { return dateToWeeknum(this.currentDate) },
+    get nextWeekDate()      { return new Date (this.currentDate.getTime() + 1000 * 60 * 60 * 24 * 7) },
+    get nextWeekYear()      { return this.nextWeekDate.getFullYear() },
+    get nextWeeknum()       { return dateToWeeknum(this.nextWeekDate) },
+    get nextWeekDates()     { return weeknumToDates(this.nextWeekYear, this.nextWeeknum) },
+    weeknumToDates,
+    dateToWeeknum,
 }

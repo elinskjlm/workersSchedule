@@ -22,3 +22,9 @@
     background-color:  #00ff00;
     box-shadow: 0px 0px 20px 5px #00ff00;
 }
+
+/* Need to be explicitly added, since .text-break doesn't work in Bootstrap when it's RTL compiled CSS */
+.text-break {
+    word-wrap: break-word;
+    word-break: break-word;
+}

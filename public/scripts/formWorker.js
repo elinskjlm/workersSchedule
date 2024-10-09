@@ -9,12 +9,20 @@ const fieldset =        document.querySelector('fieldset');
 const fullNameElement = document.getElementById('fullName');
 const commentElement =  document.getElementById('comment');
 const submitBtn =       document.getElementById("submitBtn");
+const submitSpan =      document.getElementById("submitSpan");
 
-const regexName = /^[\u0590-\u05FF\s'"\`\-().\[\]]{2,}$/;
+const nameFrame = {
+  regex: /^[\u0590-\u05FF\s.,;`'"-()\[\]]{2,}$/,
+  message: 'שם חייב להיות לפחות 2 אותיות, רק בעברית',
+}
+const commentFrame = {
+  regex: /^[\u0590-\u05FF\s.,;`'"-()\[\]]*$/,
+  message: 'תגובה צריכה להיות רק בעברית',
+}
 // const isLive =    isLiveData;
 const isLive =    isLiveData === 'true';
-const weekNum =   +currentWeekData + 1; // TODO last week of the year
-const year =      currentYearData;
+const weekNum =   formWeekData;
+const year =      formYearData;
 
 const scheduleWrapper = {
   timeSubmitted: "",
@@ -48,9 +56,9 @@ function onPageLoad() {
   document.getElementById('start-date').innerHTML = startDate;
   document.getElementById('end-date').innerHTML = endDate;
   fieldset.disabled = !isLive;
+  setPopover();
 }
 onPageLoad();
-
 
 allCheckboxes.forEach(checkbox => {
   const day = checkbox.dataset.day;
@@ -73,8 +81,6 @@ allCheckboxes.forEach(checkbox => {
   })
 })
 
-
-
 function getWeekStartEndDates(year, weekNum) {
   // Create a Date object representing the first day of the year.
   const d = new Date(year, 0, 1);
@@ -95,36 +101,46 @@ function getWeekStartEndDates(year, weekNum) {
 }
 
 fullNameElement.addEventListener('change', () => {
-  checkName();
+  const name = checkField(fullNameElement, nameFrame);
+  if (name) scheduleWrapper.name = name;
 })
 
-const checkName = () => {
-  const fullName = fullNameElement.value.trim();
-  const isNameOk = regexName.test(fullName);
-  if (isNameOk) {
-    fullNameElement.classList.remove('border-danger');
-    fullNameElement.value = fullName;
-    scheduleWrapper.name = fullName;
-  } else {
-    fullNameElement.classList.add('border-danger');
-  }
-  return isNameOk;
-}
+commentElement.addEventListener('change', () => {
+  const comment = checkField(commentElement, commentFrame);
+  if (comment) scheduleWrapper.comment = comment;
+})
 
+const checkField = (element, fieldFrame) => {
+  const value = element.value.trim();
+  const itsOk = fieldFrame.regex.test(value);
+  if (itsOk) {
+    element.classList.remove('border-danger');
+    element.value = value;
+    submitBtn.classList.remove('disabled');
+    setPopover();
+    return value
+  } else {
+    element.classList.add('border-danger');
+    showToast('שים לב', fieldFrame.message);
+    submitBtn.classList.add('disabled');
+    setPopover();
+    return false;
+  }
+}
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (isLive) {
     scheduleWrapper.timeSubmitted = new Date().toLocaleString();
     //weekNum and year are already populated
-    if (checkName()) {
+    if (checkField(fullNameElement, nameFrame)) {
       scheduleWrapper.name = fullNameElement.value;
     } else {
       fullNameElement.scrollIntoView();
       e.stopPropagation();
       return
     }
-    scheduleWrapper.comment = commentElement.value;
+    // scheduleWrapper.comment = commentElement.value;
     const asStr = JSON.stringify(scheduleWrapper)
     try {
       const response = await fetch('/api/v1/schedules', {
@@ -138,24 +154,25 @@ form.addEventListener('submit', async (e) => {
       if (answer.success) {
         window.location.replace(answer.redirect || '/thankyou');
       } else {
-        console.error(answer.msgHeb);
+        showToast('שגיאה', answer.msgHeb)
       }
     } catch (error) {
-      console.error('Error fetching', error);
+      showToast('שגיאה', error.message)
     }
   }
 })
 
-// const recurStringify = function (obj) {
-//   for (let el in obj) {
-//       if (typeof (obj[el]) == 'object' && obj[el] !== null) {
-//           recurStringify(obj[el])
-//           obj[el] = JSON.stringify(obj[el])
-//       }
-//   }
-//   return JSON.stringify(obj)
-// }
+function setPopover() {
+  const popoverElement = document.querySelector('[data-bs-toggle="popover"]')
+  const popover = new bootstrap.Popover(popoverElement)
+  if (fieldset.disabled) {
+    submitSpan.dataset.bsToggle = 'popover'
+    submitSpan.dataset.bsContent = 'הטופס נעול להגשה'
+  } else if (submitBtn.classList.contains('disabled')) {
+    submitSpan.dataset.bsToggle = 'popover'
+    submitSpan.dataset.bsContent = 'וודא שאין בעיה בשדות "שם" ו"הערות מיוחדות"'
+  } else {
+    popover.disable()
 
-// allLiveDepend.forEach(el => {
-//   el.classList.add('disabled')
-// })
+  }
+}
