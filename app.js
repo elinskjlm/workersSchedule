@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const express =         require('express');
 const path =            require('path');
 const mongoose =        require('mongoose');
@@ -11,8 +15,10 @@ const apiRoutes =       require('./routes/api');
 const viewsRoutes =     require('./routes/views');
 const User =            require('./models/user');
 const ExpressError =    require('./utils/ExpressError');
+const port =            process.env.PORT;
+const dbUrl =           process.env.DB_URL || 'mongodb://localhost:27017/sidur';
+const secret =          process.env.SECRET;
 
-const dbUrl = 'mongodb://localhost:27017/sidur';
 const app = express();
 
 mongoose.connect(dbUrl);
@@ -30,7 +36,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 const sessionConfig = {
     name: 'session',
-    secret: 'TEMPTEMPtemporarySecret',
+    secret,
     // store,
     resave: false,
     saveUninitialized: true,
@@ -116,6 +122,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render(`error`, { err });
 })
 
-app.listen(8080, () => {
-    console.log('listeningggg');
+app.listen(port, () => {
+    console.log('listening on', port);
 })
