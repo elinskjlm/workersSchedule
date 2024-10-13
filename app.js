@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 const express =         require('express');
 const path =            require('path');
 const mongoose =        require('mongoose');
+const MongoStore =      require('connect-mongo');
 const session =         require('express-session');
 const ejsMate =         require('ejs-mate');
 const passport =        require('passport');
@@ -17,7 +18,7 @@ const User =            require('./models/user');
 const ExpressError =    require('./utils/ExpressError');
 const port =            process.env.PORT;
 const dbUrl =           process.env.DB_URL || 'mongodb://localhost:27017/sidur';
-const secret =          process.env.SECRET;
+const secret =          process.env.SECRET || 'nvtmvRIMVm1';
 
 const app = express();
 
@@ -34,15 +35,24 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  touchAfter: 24 * 3600, // seconds
+})
+
+store.on('error', function(e) {
+  console.log('SESSION STORE ERROR', e)
+})
+
 const sessionConfig = {
     name: 'session',
     secret,
-    // store,
+    store,
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        // secure: true,
+        secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // miliseconds
         maxAge: 1000 * 60 * 60 * 24 * 7 // miliseconds
     }
