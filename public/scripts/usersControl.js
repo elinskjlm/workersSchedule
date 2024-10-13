@@ -142,6 +142,7 @@ async function loadUserssTable() {
     const users = await fetchUsers();
     tbody.innerHTML = '';
     users.forEach((user, i) => {
+        if (user.role === 'developer') return; // Skip rendering of dev user
         const tr = document.createElement('tr');
         tr.setAttribute('id', `tr[${i}]`);
         const actions = createActionButtons(i, user._id)

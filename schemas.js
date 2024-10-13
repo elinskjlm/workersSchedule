@@ -31,7 +31,7 @@ const extention = (joi) => ({
         },
         password: {
             validate(value, helpers) {
-                if (/^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$/.test(value)) {
+                if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])[A-Za-z0-9#?!@$%^&*-]{8,}$/.test(value)) {
                     return value;
                 }
                 return helpers.error('string.password');
