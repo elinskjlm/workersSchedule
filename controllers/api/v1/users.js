@@ -77,12 +77,22 @@ module.exports.updateUser = async (req, res) => {
 
 module.exports.deleteUser = async (req, res) => {
     const { id } = req.params;
-    const user = await User.findByIdAndDelete(id);
-    return res.send({
-        success: true,
-        msgHeb: `המשתמש "${user.username}" נמחק בהצלחה.`, //TODO
-        data: [user, req.user],
-    });
+    // const user = await User.findByIdAndDelete(id);
+    const user = await User.findById(id);
+    if (user.role === 'developer') {
+        return res.send({
+            success: false,
+            msgHeb: `המשתמש "${user.username}" לא ניתן למחיקה מכאן.`, //TODO
+            data: [user, req.user],
+        });
+    } else {
+        await user.deleteOne()
+        return res.send({
+            success: true,
+            msgHeb: `המשתמש "${user.username}" נמחק בהצלחה.`, //TODO
+            data: [user, req.user],
+        });
+    }
 }
 
 module.exports.loginUser = (req, res) => {
