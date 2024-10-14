@@ -131,7 +131,7 @@ const checkField = (element, fieldFrame) => {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (isLive) {
-    scheduleWrapper.timeSubmitted = new Date().toLocaleString();
+    scheduleWrapper.timeSubmitted = new Date();
     //weekNum and year are already populated
     if (checkField(fullNameElement, nameFrame)) {
       scheduleWrapper.name = fullNameElement.value;
